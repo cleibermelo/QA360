@@ -27,6 +27,9 @@ jobs:
 
       # The project scripts also generate src/generated-code, so scripts are skipped and the generator runs explicitly.
       - run: npm ci --ignore-scripts
+
+      # On Linux the Polygon generator reads this license file even though the package does not ship it, and fails without it.
+      - run: touch node_modules/@polygon/schematics/assets/latest/kendo-ui-license.txt
       - run: npx ng g @polygon/schematics:generated-code
 
       - run: npx ng build --configuration production --base-href /QA360/ --output-path dist/site
