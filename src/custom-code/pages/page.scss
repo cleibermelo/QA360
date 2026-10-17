@@ -1,0 +1,128 @@
+:host {
+	display: block;
+	padding: 24px;
+}
+
+.page-section {
+	background: var(--grey-1);
+	border: 1px solid var(--grey-4);
+	border-radius: 8px;
+	padding: 16px 24px;
+	margin-bottom: 24px;
+}
+
+h3 {
+	margin: 0 0 4px;
+	color: var(--grey-9);
+}
+
+.hint {
+	margin: 0 0 16px;
+	color: var(--grey-8);
+}
+
+.filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: flex-end;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 220px;
+
+	.label {
+		font-size: 12px;
+		color: var(--grey-8);
+	}
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-top: 16px;
+}
+
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	th,
+	td {
+		padding: 10px 12px;
+		text-align: left;
+		border-bottom: 1px solid var(--grey-4);
+		vertical-align: middle;
+	}
+
+	th {
+		font-size: 12px;
+		color: var(--grey-8);
+		background: var(--grey-2);
+	}
+
+	td.number,
+	th.number {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+
+	td.row-actions {
+		width: 1%;
+		white-space: nowrap;
+	}
+}
+
+.empty {
+	padding: 24px;
+	text-align: center;
+	color: var(--grey-8);
+	background: var(--grey-2);
+	border-radius: 8px;
+}
+
+.muted {
+	color: var(--grey-6);
+}
+
+.history {
+	margin: 4px 0 0;
+	padding-left: 16px;
+	font-size: 12px;
+	color: var(--grey-8);
+}
+
+.messages {
+	margin-bottom: 16px;
+}
+
+/* The multi-select reads its placeholder once, so it is hidden with CSS while chips are shown. */
+.has-selection ::ng-deep input::placeholder {
+	color: transparent !important;
+	opacity: 0;
+}
+
+/* Without a fixed width the multi-select grows with its chips and pushes the next filter to a new row. */
+.application-field {
+	width: 320px;
+
+	po-multi-select {
+		width: 100%;
+	}
+}
+
+/* From and To wrap together, never one without the other. */
+.period {
+	display: flex;
+	gap: 16px;
+
+	.field {
+		min-width: 160px;
+		width: 160px;
+	}
+}

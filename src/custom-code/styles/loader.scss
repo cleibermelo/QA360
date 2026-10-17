@@ -1,0 +1,12 @@
+﻿/* Smaller language options in the user area; important is needed to beat the shell component styles. */
+.sub-menu-option.user-area-language-option {
+  font-size: 14px !important;
+  height: 36px !important;
+}
+
+/* Numbers are right-aligned by the grid; this class centers them. */
+.datagrid-cell-wrapper.number.qa360-center-cell,
+.datagrid-cell-wrapper.number.qa360-center-cell .datagrid-cell-container {
+  justify-content: center;
+  text-align: center;
+}

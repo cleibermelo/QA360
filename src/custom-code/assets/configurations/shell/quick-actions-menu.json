@@ -1,0 +1,12 @@
+[
+	{
+		"id": "1",
+		"caption": "Quick Action One",
+		"uri": "/"
+	},
+	{
+		"id": "2",
+		"caption": "Quick Action Two",
+		"uri": "/"
+	}
+]

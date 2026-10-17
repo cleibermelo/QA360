@@ -1,0 +1,73 @@
+{
+	"$schema": "./node_modules/@polygon/schematics/schemas/polygon-sdk-json.schema.json",
+	"sdkVersion": "20.0.0",
+	"packageName": "QA360",
+	"productName": "QA360",
+	"sdkDependencies": {
+		"modules": "release-20.0.0",
+		"sdk": "release-20.0.0"
+	},
+	"authenticationOptions": {
+		"enabled": false,
+		"mode": "jwt",
+		"jwtOptions": {
+			"endpoint": "https://st.id.cegid.cloud",
+			"returnUrl": "https://localhost:4200/",
+			"postLogoutUrl": "https://localhost:4200/",
+			"clientId": "QA360-PKCE",
+			"scopes": "openid profile email",
+			"flowType": "pkce"
+		}
+	},
+	"subscriptionOptions": {
+		"enabled": false,
+		"uri": "",
+		"product": ""
+	},
+	"routingOptions": {
+		"ignoreCaseRoutesEnabled": true,
+		"publicRootRoute": ""
+	},
+	"intelligenceServices": {
+		"apiUrl": "https://st-api.pulse.cegid.cloud/api/v3/",
+		"physicalKey": "",
+		"businessKey": "",
+		"usagePlanId": "",
+		"chatbot": {
+			"id": "",
+			"webAppURL": "https://st-chat.pulse.cegid.cloud",
+			"apiEndpoint": "session"
+		},
+		"functions": {
+			"enabled": false,
+			"apiEndpoint": "promptfunction/{physicalKey}/{businessKey}/invoke",
+			"translation": {
+				"modelDefinitionId": ""
+			},
+			"summarize": {
+				"promptId": ""
+			}
+		}
+	},
+	"telemetry": {
+		"flushIntervalMs": 300000,
+		"loggers": {
+			"default": "Info",
+			"enabled": true,
+			"overrides": {
+				"consoleLogger": {
+					"enabled": true,
+					"logLevel": "Trace"
+				}
+			}
+		},
+		"metrics": {
+			"enabled": true,
+			"overrides": {
+				"ConsoleMetricProvider": {
+					"enabled": true
+				}
+			}
+		}
+	}
+}

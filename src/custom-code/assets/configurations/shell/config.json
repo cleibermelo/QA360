@@ -1,0 +1,100 @@
+{
+	"$schema": "../../../../../node_modules/@polygon/schematics/schemas/shell-config.schema.json",
+	"version": "1.0",
+	"defaultEnvironmentSelector": {
+		"subscriptionsSourceUri": "",
+		"companiesSourceUri": ""
+	},
+	"sidebar": {
+		"visible": true,
+		"startBehavior": "default",
+		"drafts": {
+			"visible": false,
+			"uri": ""
+		},
+		"quickActions": {
+			"visible": false,
+			"uri": "/assets/configurations/shell/quick-actions-menu.json"
+		},
+		"menu": {
+			"visible": true,
+			"uri": "/assets/configurations/menu/config.json",
+			"customUri": ""
+		}
+	},
+	"productBrand": {
+		"label": "",
+		"title": "QA360"
+	},
+	"topbar": {
+		"hiddenApplicationMenuButton": false,
+		"hiddenLogo": false,
+		"hiddenSearchBar": false,
+		"hiddenChatButton": false,
+		"hiddenResourceCenterButton": false,
+		"hiddenUserAreaMenuButton": false,
+		"hiddenEnvironmentSelector": false
+	},
+	"pageHeader": {
+		"visible": true,
+		"breadcrumbs": {
+			"visible": true
+		}
+	},
+	"userAreaMenu": {
+		"userProfile": {
+			"hide": false,
+			"claims": []
+		},
+		"subscriptionUsersButton": {
+			"hide": true,
+			"claims": []
+		},
+		"subscriptionButton": {
+			"hide": true,
+			"claims": []
+		},
+		"changeThemeMenu": {
+			"hide": false,
+			"claims": []
+		},
+		"chatButton": {
+			"hide": true,
+			"claims": []
+		},
+		"helpCenterButton": {
+			"hide": true,
+			"claims": []
+		},
+		"quickGuideButton": {
+			"hide": true,
+			"claims": []
+		},
+		"shortcutsButton": {
+			"hide": true,
+			"claims": [],
+			"url": ""
+		},
+		"aboutButton": {
+			"hide": false,
+			"claims": []
+		},
+		"applicationButton": {
+			"hide": true,
+			"claims": [],
+			"url": ""
+		},
+		"logoutButton": {
+			"hide": false,
+			"claims": []
+		},
+		"hideRoleIfSingleRole": {
+			"hide": true,
+			"claims": []
+		},
+		"changeLanguageMenu": {
+			"hide": false,
+			"claims": []
+		}
+	}
+}

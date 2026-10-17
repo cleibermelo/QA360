@@ -1,0 +1,23 @@
+{
+	"$schema": "../../../../../node_modules/@polygon/schematics/schemas/menu-config.schema.json",
+	"menuItems": [
+		{
+			"id": "dashboard",
+			"uri": "/dashboard",
+			"caption": "clientApp.components.RES_Menu_Dashboard",
+			"icon": "icon-show_chart"
+		},
+		{
+			"id": "records",
+			"uri": "/records",
+			"caption": "clientApp.components.RES_Menu_Records",
+			"icon": "icon-edit_calendar"
+		},
+		{
+			"id": "teams",
+			"uri": "/teams",
+			"caption": "clientApp.components.RES_Menu_Teams",
+			"icon": "icon-groups"
+		}
+	]
+}

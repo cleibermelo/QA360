@@ -1,0 +1,8 @@
+app-hello-world {
+    display: flex;
+    flex-direction: column;
+
+    .product-name {
+        font-weight: bold;
+    }
+}

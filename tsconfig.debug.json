@@ -1,0 +1,28 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+	"extends": "./tsconfig.app.json",
+	"compilerOptions": {
+		"paths": {
+			// Uncomment for debugging a specific client module
+			// "CLIENT_MODULE_TO_DEBUG": [
+			//   "../../ClientModules/CLIENT_MODULE_TO_DEBUG/src"
+			// ]
+		}
+	},
+	"include": [
+		"./**/*",
+		"./src/**/*.ts"
+		// Uncomment for debug a specific client module
+		// "../../ClientModules/CLIENT_MODULE_TO_DEBUG/src/**/*.ts"
+	],
+	"exclude": [
+		"test.ts",
+		"**/*spec.ts",
+		"./e2e/**/*"
+		// "../../ClientModules/CLIENT_MODULE_TO_DEBUG/src/**/*spec.ts"
+	],
+	"files": [
+		"src/generated-code/main.ts"
+	]
+}
