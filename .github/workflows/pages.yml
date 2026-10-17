@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The project scripts also generate src/generated-code, so scripts are skipped and the generator runs explicitly.
+      - run: npm ci --ignore-scripts
+      - run: npx ng g @polygon/schematics:generated-code
+
+      - run: npx ng build --configuration production --base-href /QA360/ --output-path dist/site
+
+      # The production build expects the deployment environment file to be provided at deploy time.
+      - run: cp src/custom-code/environments/deploys/env.pd.json dist/site/browser/assets/environment.json
+
+      # GitHub Pages answers unknown paths (like /QA360/records on reload) with 404.html, so it must be the app itself.
+      - run: cp dist/site/browser/index.html dist/site/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/site/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

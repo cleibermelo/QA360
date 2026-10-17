@@ -14,11 +14,11 @@
 		},
 		"quickActions": {
 			"visible": false,
-			"uri": "/assets/configurations/shell/quick-actions-menu.json"
+			"uri": "assets/configurations/shell/quick-actions-menu.json"
 		},
 		"menu": {
 			"visible": true,
-			"uri": "/assets/configurations/menu/config.json",
+			"uri": "assets/configurations/menu/config.json",
 			"customUri": ""
 		}
 	},
