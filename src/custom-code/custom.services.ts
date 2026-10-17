@@ -37,6 +37,38 @@ const provideLanguageSupport = (): EnvironmentProviders =>
 		});
 	});
 
+/**
+ * Polygon hard-codes images like "/assets/images/default-user-image.svg", which ignore the base href.
+ * When the app is served from a sub-path (GitHub Pages: /QA360/) those images break, so their URL is rewritten.
+ */
+const provideSubpathAssetFix = (): EnvironmentProviders =>
+	provideEnvironmentInitializer(() => {
+		const base = new URL(document.baseURI);
+		if (base.pathname === '/') {
+			return;
+		}
+		const fix = (image: HTMLImageElement): void => {
+			const src = image.getAttribute('src');
+			if (src?.startsWith('/assets/')) {
+				image.setAttribute('src', new URL(src.slice(1), base).href);
+			}
+		};
+		new MutationObserver((records) => {
+			for (const record of records) {
+				if (record.target instanceof HTMLImageElement) {
+					fix(record.target);
+				}
+				record.addedNodes.forEach((node) => {
+					if (node instanceof HTMLImageElement) {
+						fix(node);
+					} else if (node instanceof HTMLElement) {
+						node.querySelectorAll('img').forEach(fix);
+					}
+				});
+			}
+		}).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
+	});
+
 /** Stores the data in Supabase and tells the user when it cannot be loaded. */
 const provideCoverageData = (): (Provider | EnvironmentProviders)[] => [
 	{ provide: CoverageRepository, useClass: SupabaseCoverageRepository },
@@ -60,5 +92,6 @@ const provideCoverageData = (): (Provider | EnvironmentProviders)[] => [
  */
 export const customMainServices: (Provider | EnvironmentProviders)[] = [
 	provideLanguageSupport(),
+	provideSubpathAssetFix(),
 	...provideCoverageData()
 ];
