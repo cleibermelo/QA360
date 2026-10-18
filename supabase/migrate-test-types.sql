@@ -1,4 +1,4 @@
--- QA360 - migracao dos tipos de teste para: unit, integration, api, ui e performance (inativo).
+-- QAPulse - migracao dos tipos de teste para: unit, integration, api, ui e performance (inativo).
 -- Rode UMA vez no Supabase (SQL Editor) em um banco criado com a lista antiga.
 -- Bancos novos ja nascem com a lista nova pelo supabase/schema.sql.
 --

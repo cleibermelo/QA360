@@ -1,401 +1,405 @@
 {
-	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-	"version": 1,
-	"newProjectRoot": "projects",
-	"projects": {
-		"QA360": {
-			"projectType": "application",
-			"schematics": {
-				"@schematics/angular:component": {
-					"style": "scss"
-				},
-				"@schematics/angular:application": {
-					"strict": true
-				}
-			},
-			"root": "",
-			"sourceRoot": "src",
-			"prefix": "app",
-			"architect": {
-				"build": {
-					"builder": "@angular/build:application",
-					"options": {
-						"browser": "src/generated-code/main.ts",
-						"index": "src/generated-code/index.html",
-						"polyfills": ["zone.js", "@angular/localize/init"],
-						"tsConfig": "tsconfig.app.json",
-						"inlineStyleLanguage": "scss",
-						"aot": true,
-						"sourceMap": false,
-						"assets": [
-							{
-								"glob": "**/*",
-								"input": "public"
-							}
-						],
-						"styles": [
-							{
-								"input": "src/generated-code/styles/loader.scss",
-								"inject": true,
-								"bundleName": "loader"
-							},
-							"./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-							"./node_modules/@polygon/themes/index.scss",
-							{
-								"input": "./node_modules/@polygon/themes/po-light.scss",
-								"inject": false,
-								"bundleName": "light.theme"
-							},
-							{
-								"input": "./node_modules/@polygon/themes/po-dark.scss",
-								"inject": false,
-								"bundleName": "dark.theme"
-							}
-						],
-						"allowedCommonJsDependencies": [
-							"userpilot",
-							"@tweenjs/tween.js",
-							"chart.js",
-							"date-fns/locale",
-							"date-fns/locale/en-US",
-							"date-fns/locale/en-GB",
-							"date-fns/locale/es",
-							"date-fns/locale/pt",
-							"file-saver",
-							"jsonpath",
-							"patternomaly",
-							"cropperjs"
-						],
-						"stylePreprocessorOptions": {
-							"includePaths": ["./node_modules/"]
-						},
-						"outputPath": {
-							"base": "dist",
-							"browser": ""
-						}
-					},
-					"configurations": {
-						"debugging": {
-							"baseHref": "/",
-							"tsConfig": "tsconfig.debug.json",
-							"sourceMap": {
-								"scripts": true,
-								"styles": true,
-								"hidden": false,
-								"vendor": true
-							},
-							"aot": false,
-							"optimization": false,
-							"assets": [
-								{
-									"glob": "manifest.webmanifest",
-									"input": "src/generated-code/",
-									"output": "./"
-								},
-								{
-									"glob": "silent-refresh.html",
-									"input": "src/generated-code/",
-									"output": "./"
-								},
-								{
-									"glob": "favicon.ico",
-									"input": "src/generated-code/assets/images/",
-									"output": "./"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/components/assets/tinymce/",
-									"output": "./assets/tinymce/"
-								},
-								{
-									"glob": "Beaterial.svg",
-									"input": "./node_modules/@polygon/themes/assets/icons/",
-									"output": "./assets/icons/"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/shell/assets/",
-									"output": "./assets/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/ngcore/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/printing/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/extensibility/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/shell/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/qbuilder/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/dashboard/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/components/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/forms/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/printing/assets/images/",
-									"output": "./assets/modules/printing/images/"
-								},
-								{
-									"glob": "**/*",
-									"input": "src/generated-code/assets",
-									"output": "/assets"
-								},
-								{
-									"glob": "**/*",
-									"input": "src/custom-code/assets",
-									"output": "/assets"
-								},
-								{
-									"input": "src/custom-code/environments/debug",
-									"output": "/assets",
-									"glob": "environment.json"
-								}
-							],
-							"scripts": [
-								{
-									"input": "src/generated-code/assets/browser-support/browser-support.js",
-									"inject": true,
-									"bundleName": "browser-support"
-								}
-							]
-						},
-						"production": {
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "500kb",
-									"maximumError": "7.75mb"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "20kb",
-									"maximumError": "75kb"
-								}
-							],
-							"outputHashing": "all",
-							"baseHref": "/",
-							"serviceWorker": "src/generated-code/ngsw-config.json",
-							"namedChunks": true,
-							"statsJson": true,
-							"sourceMap": {
-								"scripts": true,
-								"styles": true,
-								"hidden": false,
-								"vendor": true
-							},
-							"optimization": {
-								"scripts": true,
-								"fonts": true,
-								"styles": {
-									"minify": true,
-									"inlineCritical": false
-								}
-							},
-							"assets": [
-								{
-									"glob": "manifest.webmanifest",
-									"input": "src/generated-code/",
-									"output": "./"
-								},
-								{
-									"glob": "favicon.ico",
-									"input": "src/generated-code/assets/images/",
-									"output": "./"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/components/assets/tinymce/",
-									"output": "./assets/tinymce/"
-								},
-								{
-									"glob": "Beaterial.svg",
-									"input": "./node_modules/@polygon/themes/assets/icons/",
-									"output": "./assets/icons/"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/shell/assets/",
-									"output": "./assets/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/ngcore/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/printing/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/extensibility/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/shell/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/qbuilder/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/dashboard/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/components/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*.lang.json",
-									"input": "./node_modules/@polygon/forms/i18n/",
-									"output": "./assets/i18n/"
-								},
-								{
-									"glob": "**/*",
-									"input": "./node_modules/@polygon/printing/assets/images/",
-									"output": "./assets/modules/printing/images/"
-								},
-								{
-									"glob": "**/*",
-									"input": "src/generated-code/assets",
-									"output": "/assets"
-								},
-								{
-									"glob": "**/*",
-									"input": "src/custom-code/assets",
-									"output": "/assets"
-								},
-								{
-									"input": "src/custom-code/environments/prod",
-									"output": "/assets",
-									"glob": "environment.json"
-								},
-								{
-									"input": "src/custom-code/environments/deploys",
-									"output": "/deploys",
-									"glob": "**/*"
-								}
-							],
-							"scripts": [
-								{
-									"input": "src/generated-code/assets/browser-support/browser-support.js",
-									"inject": false,
-									"bundleName": "browser-support"
-								}
-							]
-						},
-						"development": {
-							"optimization": false,
-							"extractLicenses": false,
-							"sourceMap": true
-						}
-					},
-					"defaultConfiguration": "development"
-				},
-				"serve": {
-					"builder": "@angular/build:dev-server",
-					"configurations": {
-						"debugging": {
-							"buildTarget": "QA360:build:debugging",
-							"ssl": true,
-							"sslKey": "src/generated-code/ssl/localhost.key",
-							"sslCert": "src/generated-code/ssl/localhost.crt"
-						},
-						"production": {
-							"buildTarget": "QA360:build:production",
-							"ssl": true,
-							"sslKey": "src/generated-code/ssl/localhost.key",
-							"sslCert": "src/generated-code/ssl/localhost.crt"
-						},
-						"development": {
-							"buildTarget": "QA360:build:development"
-						}
-					},
-					"defaultConfiguration": "development",
-					"options": {}
-				},
-				"extract-i18n": {
-					"builder": "@angular/build:extract-i18n"
-				},
-				"test": {
-					"builder": "@angular/build:karma",
-					"options": {
-						"polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"],
-						"tsConfig": "tsconfig.spec.json",
-						"inlineStyleLanguage": "scss",
-						"assets": [
-							{
-								"glob": "**/*",
-								"input": "public"
-							},
-							"src/favicon.ico",
-							"src/assets",
-							"src/generated-code/manifest.webmanifest"
-						],
-						"styles": ["src/generated-code/styles/loader.scss"],
-						"codeCoverage": true,
-						"stylePreprocessorOptions": {
-							"includePaths": ["./node_modules/"]
-						}
-					},
-					"configurations": {
-						"production": {
-							"browsers": "ChromeHeadless",
-							"watch": false,
-							"sourceMap": false
-						},
-						"debugging": {
-							"browsers": "Chrome",
-							"watch": true,
-							"sourceMap": true
-						}
-					},
-					"defaultConfiguration": "production"
-				},
-				"lint": {
-					"builder": "@angular-eslint/builder:lint",
-					"options": {
-						"lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
-					}
-				}
-			}
-		}
-	},
-	"cli": {
-		"analytics": false
-	}
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "QAPulse": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/generated-code/main.ts",
+            "index": "src/generated-code/index.html",
+            "polyfills": ["zone.js", "@angular/localize/init"],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "aot": true,
+            "sourceMap": false,
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              {
+                "input": "src/generated-code/styles/loader.scss",
+                "inject": true,
+                "bundleName": "loader"
+              },
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "./node_modules/@polygon/themes/index.scss",
+              {
+                "input": "./node_modules/@polygon/themes/po-light.scss",
+                "inject": false,
+                "bundleName": "light.theme"
+              },
+              {
+                "input": "./node_modules/@polygon/themes/po-dark.scss",
+                "inject": false,
+                "bundleName": "dark.theme"
+              }
+            ],
+            "allowedCommonJsDependencies": [
+              "userpilot",
+              "@tweenjs/tween.js",
+              "chart.js",
+              "date-fns/locale",
+              "date-fns/locale/en-US",
+              "date-fns/locale/en-GB",
+              "date-fns/locale/es",
+              "date-fns/locale/pt",
+              "file-saver",
+              "jsonpath",
+              "patternomaly",
+              "cropperjs"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["./node_modules/"]
+            },
+            "outputPath": {
+              "base": "dist",
+              "browser": ""
+            }
+          },
+          "configurations": {
+            "debugging": {
+              "baseHref": "/",
+              "tsConfig": "tsconfig.debug.json",
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "hidden": false,
+                "vendor": true
+              },
+              "aot": false,
+              "optimization": false,
+              "assets": [
+                {
+                  "glob": "manifest.webmanifest",
+                  "input": "src/generated-code/",
+                  "output": "./"
+                },
+                {
+                  "glob": "silent-refresh.html",
+                  "input": "src/generated-code/",
+                  "output": "./"
+                },
+                {
+                  "glob": "favicon.ico",
+                  "input": "src/generated-code/assets/images/",
+                  "output": "./"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/components/assets/tinymce/",
+                  "output": "./assets/tinymce/"
+                },
+                {
+                  "glob": "Beaterial.svg",
+                  "input": "./node_modules/@polygon/themes/assets/icons/",
+                  "output": "./assets/icons/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/shell/assets/",
+                  "output": "./assets/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/ngcore/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/printing/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/extensibility/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/shell/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/qbuilder/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/dashboard/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/components/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/forms/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/printing/assets/images/",
+                  "output": "./assets/modules/printing/images/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/generated-code/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/custom-code/assets",
+                  "output": "/assets"
+                },
+                {
+                  "input": "src/custom-code/environments/debug",
+                  "output": "/assets",
+                  "glob": "environment.json"
+                }
+              ],
+              "scripts": [
+                {
+                  "input": "src/generated-code/assets/browser-support/browser-support.js",
+                  "inject": true,
+                  "bundleName": "browser-support"
+                }
+              ]
+            },
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "7.75mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "20kb",
+                  "maximumError": "75kb"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "/",
+              "serviceWorker": "src/generated-code/ngsw-config.json",
+              "namedChunks": true,
+              "statsJson": true,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "hidden": false,
+                "vendor": true
+              },
+              "optimization": {
+                "scripts": true,
+                "fonts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                }
+              },
+              "assets": [
+                {
+                  "glob": "manifest.webmanifest",
+                  "input": "src/generated-code/",
+                  "output": "./"
+                },
+                {
+                  "glob": "favicon.ico",
+                  "input": "src/generated-code/assets/images/",
+                  "output": "./"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/components/assets/tinymce/",
+                  "output": "./assets/tinymce/"
+                },
+                {
+                  "glob": "Beaterial.svg",
+                  "input": "./node_modules/@polygon/themes/assets/icons/",
+                  "output": "./assets/icons/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/shell/assets/",
+                  "output": "./assets/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/ngcore/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/printing/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/extensibility/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/shell/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/qbuilder/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/dashboard/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/components/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*.lang.json",
+                  "input": "./node_modules/@polygon/forms/i18n/",
+                  "output": "./assets/i18n/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@polygon/printing/assets/images/",
+                  "output": "./assets/modules/printing/images/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/generated-code/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/custom-code/assets",
+                  "output": "/assets"
+                },
+                {
+                  "input": "src/custom-code/environments/prod",
+                  "output": "/assets",
+                  "glob": "environment.json"
+                },
+                {
+                  "input": "src/custom-code/environments/deploys",
+                  "output": "/deploys",
+                  "glob": "**/*"
+                }
+              ],
+              "scripts": [
+                {
+                  "input": "src/generated-code/assets/browser-support/browser-support.js",
+                  "inject": false,
+                  "bundleName": "browser-support"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "debugging": {
+              "buildTarget": "QAPulse:build:debugging",
+              "ssl": true,
+              "sslKey": "src/generated-code/ssl/localhost.key",
+              "sslCert": "src/generated-code/ssl/localhost.crt"
+            },
+            "production": {
+              "buildTarget": "QAPulse:build:production",
+              "ssl": true,
+              "sslKey": "src/generated-code/ssl/localhost.key",
+              "sslCert": "src/generated-code/ssl/localhost.crt"
+            },
+            "development": {
+              "buildTarget": "QAPulse:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {}
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "@angular/localize/init"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              "src/favicon.ico",
+              "src/assets",
+              "src/generated-code/manifest.webmanifest"
+            ],
+            "styles": ["src/generated-code/styles/loader.scss"],
+            "codeCoverage": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["./node_modules/"]
+            }
+          },
+          "configurations": {
+            "production": {
+              "browsers": "ChromeHeadless",
+              "watch": false,
+              "sourceMap": false
+            },
+            "debugging": {
+              "browsers": "Chrome",
+              "watch": true,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
 }

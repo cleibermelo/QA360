@@ -1,31 +1,31 @@
 ﻿/* Smaller language options in the user area; important is needed to beat the shell component styles. */
 .sub-menu-option.user-area-language-option {
-  font-size: 14px !important;
-  height: 36px !important;
+	font-size: 14px !important;
+	height: 36px !important;
 }
 
 /* Numbers are right-aligned by the grid; this class centers them. */
-.datagrid-cell-wrapper.number.qa360-center-cell,
-.datagrid-cell-wrapper.number.qa360-center-cell .datagrid-cell-container {
-  justify-content: center;
-  text-align: center;
+.datagrid-cell-wrapper.number.qapulse-center-cell,
+.datagrid-cell-wrapper.number.qapulse-center-cell .datagrid-cell-container {
+	justify-content: center;
+	text-align: center;
 }
 
-/* Without a session (or while the password is pending) only the product name stays in the shell; classes set by auth/signed-out-chrome.ts. */
-body.qa360-auth-locked po-sidebar,
-body.qa360-auth-locked [data-testid='access-menu'],
-body.qa360-auth-locked po-topbar po-search,
-body.qa360-auth-anonymous po-user-area,
-body.qa360-auth-anonymous po-page-header,
-body.qa360-auth-anonymous po-topbar [data-testid='branding'] {
-  display: none !important;
+/* Without a session (or while the password is pending) the shell hides its menu and user area; classes set by auth/signed-out-chrome.ts. */
+body.qapulse-auth-locked po-sidebar,
+body.qapulse-auth-locked [data-testid='access-menu'],
+body.qapulse-auth-locked po-topbar po-search,
+body.qapulse-auth-anonymous po-user-area,
+body.qapulse-auth-anonymous po-page-header,
+body.qapulse-auth-anonymous po-topbar [data-testid='branding'] {
+	display: none !important;
 }
 
-body.qa360-auth-locked .page-container-content {
-  margin-left: 0 !important;
+body.qapulse-auth-locked .page-container-content {
+	margin-left: 0 !important;
 }
 
 /* The top right "Sign in" button gives way while the sign-in form is open. */
-body:has(.modal-container.qa360-login) app-sign-in-button {
-  display: none;
+body:has(.modal-container.qapulse-login) app-sign-in-button {
+	display: none;
 }

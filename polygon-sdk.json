@@ -1,8 +1,8 @@
 {
 	"$schema": "./node_modules/@polygon/schematics/schemas/polygon-sdk-json.schema.json",
 	"sdkVersion": "20.0.0",
-	"packageName": "QA360",
-	"productName": "QA360",
+	"packageName": "QAPulse",
+	"productName": "QAPulse",
 	"sdkDependencies": {
 		"modules": "release-20.0.0",
 		"sdk": "release-20.0.0"
@@ -14,7 +14,7 @@
 			"endpoint": "https://st.id.cegid.cloud",
 			"returnUrl": "https://localhost:4200/",
 			"postLogoutUrl": "https://localhost:4200/",
-			"clientId": "QA360-PKCE",
+			"clientId": "QAPulse-PKCE",
 			"scopes": "openid profile email",
 			"flowType": "pkce"
 		}

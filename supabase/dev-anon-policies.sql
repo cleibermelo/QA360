@@ -1,4 +1,4 @@
--- QA360 - SOMENTE DESENVOLVIMENTO / MVP SEM LOGIN.
+-- QAPulse - SOMENTE DESENVOLVIMENTO / MVP SEM LOGIN.
 -- Libera leitura e escrita para o papel "anon", ou seja, qualquer pessoa com a URL do projeto e a
 -- chave publica consegue ler e alterar os dados. Nao use com dados reais.
 -- Para remover quando o login for implementado: execute o bloco comentado no final deste arquivo.

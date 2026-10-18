@@ -1,5 +1,5 @@
-import { AuthApiError, AuthRetryableFetchError, Session, SupabaseClient } from '@supabase/supabase-js';
 import { TestBed } from '@angular/core/testing';
+import { AuthApiError, AuthRetryableFetchError, Session, SupabaseClient } from '@supabase/supabase-js';
 import { isInviteHash, isPasswordPending, rememberInviteFromUrl } from './invite-link';
 import { SessionService } from './session.service';
 import { SUPABASE_CLIENT } from './supabase.client';

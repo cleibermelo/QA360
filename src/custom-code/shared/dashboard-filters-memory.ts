@@ -8,7 +8,7 @@ export interface DashboardFilters {
 	valuesOpen: boolean;
 }
 
-const STORAGE_KEY = 'qa360.dashboard-filters';
+const STORAGE_KEY = 'qapulse.dashboard-filters';
 
 let describeFilters: (() => DashboardFilters) | null = null;
 

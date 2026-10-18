@@ -4,11 +4,11 @@ import {
 	Component,
 	computed,
 	createComponent,
+	effect,
 	EnvironmentInjector,
-	inject,
-	provideEnvironmentInitializer,
 	EnvironmentProviders,
-	effect
+	inject,
+	provideEnvironmentInitializer
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ButtonComponent, ButtonOptions, ButtonTypeEnum, ModalService, SizeEnum } from '@polygon/components';
@@ -78,7 +78,7 @@ export const provideSignedOutChrome = (): EnvironmentProviders =>
 
 		effect(() => {
 			const signedIn = session.signedIn();
-			document.body.classList.toggle('qa360-auth-anonymous', !signedIn);
-			document.body.classList.toggle('qa360-auth-locked', !signedIn || session.passwordPending());
+			document.body.classList.toggle('qapulse-auth-anonymous', !signedIn);
+			document.body.classList.toggle('qapulse-auth-locked', !signedIn || session.passwordPending());
 		});
 	});

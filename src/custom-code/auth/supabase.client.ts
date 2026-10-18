@@ -1,6 +1,6 @@
 import { inject, InjectionToken } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { EnvironmentSettings } from '@polygon/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { rememberInviteFromUrl } from './invite-link';
 
 /** The `supabase` block of assets/environment.json; the key is the public (anon) one, never the service role key. */

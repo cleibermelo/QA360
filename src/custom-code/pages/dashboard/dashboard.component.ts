@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import {
 	ButtonComponent,
+	ButtonColorEnum,
 	ButtonOptions,
 	ButtonTypeEnum,
 	MonthInputComponent,
@@ -168,7 +169,8 @@ export class DashboardComponent {
 	protected readonly filtersKey = signal(0);
 	protected readonly clearButton = new ButtonOptions({
 		text: this.translator.t('Dashboard_Reset'),
-		type: ButtonTypeEnum.Text
+		type: ButtonTypeEnum.Text,
+		color: ButtonColorEnum.Grey
 	});
 
 	/** Applications of the selected team. */

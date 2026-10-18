@@ -20,7 +20,7 @@ import { Translator } from '../../shared/translator.service';
 export const openLoginModal = (modal: ModalService, translator: Translator): void => {
 	modal.toggleModal(
 		new ModalOptions({
-			id: 'qa360-login',
+			id: 'qapulse-login',
 			title: signal(translator.t('Login_Title')),
 			size: signal(SizeEnum.Small),
 			closeOnOutsideClick: signal(false),

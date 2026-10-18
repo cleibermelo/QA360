@@ -38,7 +38,7 @@ export class FeedbackService {
 		this.dialogService.toggleDialog(
 			new DialogOptions({
 				// The dialog service closes a dialog opened twice with the same id, so every call gets its own.
-				id: `qa360-confirm-${Date.now()}`,
+				id: `qapulse-confirm-${Date.now()}`,
 				title: signal(options.title),
 				description: signal(options.description),
 				// Without an explicit action, Cancel just closes the dialog.

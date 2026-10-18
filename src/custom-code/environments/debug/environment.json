@@ -2,7 +2,7 @@
   "$schema": "../../../../node_modules/@polygon/schematics/schemas/environment-json.schema.json",
   "name": "debug",
   "production": false,
-  "productName": "QA360",
+  "productName": "QAPulse",
   "version": "v1",
   "supabase": {
     "url": "https://vqozovkvyqdqrztmbypy.supabase.co",
@@ -17,7 +17,7 @@
     "mode": "jwt",
     "jwtOptions": {
       "endpoint": "https://st.id.cegid.cloud",
-      "clientId": "QA360-PKCE",
+      "clientId": "QAPulse-PKCE",
       "scopes": "openid profile email",
       "returnUrl": "https://localhost:4200/",
       "postLogoutUrl": "https://localhost:4200/",
@@ -25,7 +25,7 @@
     }
   },
   "caching": {
-    "isolationKey": "QA360-DEBUG"
+    "isolationKey": "QAPulse-DEBUG"
   },
   "routingOptions": {
     "ignoreCaseRoutesEnabled": true

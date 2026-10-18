@@ -9,7 +9,7 @@ import { Translator } from '../../shared/translator.service';
 export const openRecordHistoryModal = (modal: ModalService, translator: Translator, entry: CoverageEntry): void => {
 	modal.toggleModal(
 		new ModalOptions({
-			id: 'qa360-record-history',
+			id: 'qapulse-record-history',
 			title: signal(translator.t('Records_HistoryTitle')),
 			size: signal(SizeEnum.Regular),
 			closeOnOutsideClick: signal(true),

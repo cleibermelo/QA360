@@ -426,7 +426,7 @@ export class RecordBatchFormComponent implements OnInit {
 
 	/** The modal has no slot for the title, so the info button is added to its header element directly. */
 	private addInfoIconToTitle(): void {
-		const title = document.querySelector('.modal-container.qa360-record-form [data-testid="modal-header-title"]');
+		const title = document.querySelector('.modal-container.qapulse-record-form [data-testid="modal-header-title"]');
 		if (!title) {
 			return;
 		}

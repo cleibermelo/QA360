@@ -8,9 +8,9 @@ import {
 	untracked
 } from '@angular/core';
 import { I18nService, USER } from '@polygon/core';
+import { provideUserAreaIdentity } from './auth/polygon-user-area';
 import { SessionService } from './auth/session.service';
 import { provideSignedOutChrome } from './auth/signed-out-chrome';
-import { provideUserAreaIdentity } from './auth/polygon-user-area';
 import { CoverageRepository } from './data/coverage.repository';
 import { CoverageStore } from './data/coverage.store';
 import { SupabaseCoverageRepository } from './data/supabase-coverage.repository';
@@ -19,7 +19,7 @@ import { FeedbackService } from './shared/feedback.service';
 import { Translator } from './shared/translator.service';
 
 /** Where the chosen language is remembered between visits. */
-const LANGUAGE_STORAGE_KEY = 'qa360.language';
+const LANGUAGE_STORAGE_KEY = 'qapulse.language';
 const DEFAULT_CULTURE = 'en-US';
 
 /**
@@ -52,7 +52,7 @@ const provideLanguageSupport = (): EnvironmentProviders =>
 
 /**
  * Polygon hard-codes images like "/assets/images/default-user-image.svg", which ignore the base href.
- * When the app is served from a sub-path (GitHub Pages: /QA360/) those images break, so their URL is rewritten.
+ * When the app is served from a sub-path (GitHub Pages: /QAPulse/) those images break, so their URL is rewritten.
  */
 const provideSubpathAssetFix = (): EnvironmentProviders =>
 	provideEnvironmentInitializer(() => {

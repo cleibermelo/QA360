@@ -1,4 +1,4 @@
--- QA360 - schema do Supabase (Postgres).
+-- QAPulse - schema do Supabase (Postgres).
 -- Como usar: Supabase > SQL Editor > New query > colar este arquivo inteiro > Run.
 -- Pode ser executado de novo sem erro (usa "if not exists" / "or replace" / "on conflict").
 -- Regras de negocio espelham src/custom-code/domain/rules.ts.

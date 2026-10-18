@@ -106,7 +106,7 @@ export class RecordsDataSource extends MinSearchDataSource {
 		const compact = window.matchMedia('(max-width: 600px)').matches;
 		const hiddenOnPhone = ['team', 'note', 'updatedAt', 'application', 'testType'];
 		this.options = {
-			id: 'qa360-records',
+			id: 'qapulse-records',
 			title: t('Title_Records'),
 			hideRefreshButton: true,
 			canChangeColumnOptions: false,
@@ -143,7 +143,7 @@ export class RecordsDataSource extends MinSearchDataSource {
 					field: 'percent',
 					type: ColumnTypeEnum.Number,
 					sortable: true,
-					class: 'qa360-center-cell'
+					class: 'qapulse-center-cell'
 				},
 				{ title: t('Records_Note'), field: 'note', type: ColumnTypeEnum.Text },
 				{ title: t('Records_UpdatedAt'), field: 'updatedAt', type: ColumnTypeEnum.Text }

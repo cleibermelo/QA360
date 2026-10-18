@@ -29,7 +29,7 @@ interface ApplicationRow {
 export const openTeamModal = (modal: ModalService, translator: Translator, teamId?: string): void => {
 	modal.toggleModal(
 		new ModalOptions({
-			id: 'qa360-team-form',
+			id: 'qapulse-team-form',
 			title: signal(translator.t(teamId ? 'TeamForm_TitleEdit' : 'TeamForm_TitleCreate')),
 			size: signal(SizeEnum.Large),
 			closeOnOutsideClick: signal(false),

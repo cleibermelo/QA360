@@ -22,7 +22,7 @@ import { RecordBatchFormComponent } from './record-batch-form.component';
 export const openRecordModal = (modal: ModalService, translator: Translator, entry?: CoverageEntry): void => {
 	modal.toggleModal(
 		new ModalOptions({
-			id: 'qa360-record-form',
+			id: 'qapulse-record-form',
 			title: signal(translator.t(entry ? 'Records_TitleEdit' : 'Records_Create')),
 			size: signal(SizeEnum.Large),
 			closeOnOutsideClick: signal(false),

@@ -75,7 +75,7 @@ export class TeamsDataSource extends MinSearchDataSource {
 	protected override async setDatagridOptions(): Promise<void> {
 		const t = (key: string): string => this.translator.t(key);
 		this.options = {
-			id: 'qa360-teams',
+			id: 'qapulse-teams',
 			title: t('Title_Teams'),
 			hideRefreshButton: true,
 			canChangeColumnOptions: false,

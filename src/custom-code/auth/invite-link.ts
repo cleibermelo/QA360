@@ -1,5 +1,5 @@
 /** Remembers, until the user chooses a password, that the session came from an invite link. */
-const PENDING_PASSWORD_KEY = 'qa360.password-pending';
+const PENDING_PASSWORD_KEY = 'qapulse.password-pending';
 
 /** The invite link carries `type=invite` in the URL fragment; auth-js has no event that tells it apart from a normal sign-in. */
 export const isInviteHash = (hash: string): boolean =>

@@ -1,4 +1,4 @@
-# QA360 - Supabase
+# QAPulse - Supabase
 
 Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região eu-west-1). Equipes, aplicações, registros e histórico são lidos e gravados no banco. O acesso às telas exige login (Supabase Auth, e-mail e senha, contas por convite).
 
@@ -9,7 +9,7 @@ Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região e
 | `supabase/schema.sql`                                   | Cria as tabelas, restrições, gatilho de histórico, dados iniciais (tipos de teste, equipe TOCT e 4 aplicações) e liga RLS com acesso para usuários autenticados. Pode rodar mais de uma vez. |
 | `supabase/dev-anon-policies.sql`                        | **Só desenvolvimento.** Libera leitura e escrita para quem não está logado. Tem o bloco para remover no final.                                                                               |
 | `supabase/migrate-test-types.sql`                       | Migra um banco criado com a lista antiga de tipos de teste (e2e_api, e2e_ui, contract, security) para a atual. Rodar uma vez.                                                                |
-| `src/custom-code/environments/**/*.json`                | Bloco `supabase` (URL, chave pública e tamanho mínimo da senha) lido em tempo de execução.                                                                                              |
+| `src/custom-code/environments/**/*.json`                | Bloco `supabase` (URL, chave pública e tamanho mínimo da senha) lido em tempo de execução.                                                                                                   |
 | `src/custom-code/auth/`                                 | Cliente único do Supabase, sessão e proteção das rotas.                                                                                                                                      |
 | `src/custom-code/data/coverage.repository.ts`           | Contrato de armazenamento que o store usa.                                                                                                                                                   |
 | `src/custom-code/data/supabase-coverage.repository.ts`  | Implementação com `@supabase/supabase-js`.                                                                                                                                                   |
