@@ -126,3 +126,59 @@ h3 {
 		width: 160px;
 	}
 }
+
+/* Phones: filters stack at full width and the period fields share the row. */
+@media (max-width: 600px) {
+	:host {
+		padding: 12px;
+	}
+
+	.page-section {
+		padding: 12px;
+		margin-bottom: 16px;
+	}
+
+	.filters {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+
+	.field,
+	.application-field {
+		min-width: 0;
+		width: 100%;
+	}
+
+	.period {
+		gap: 12px;
+
+		.field {
+			flex: 1 1 0;
+			min-width: 0;
+			width: auto;
+		}
+	}
+
+	.data-table th,
+	.data-table td {
+		padding: 8px;
+	}
+}
+
+/* Title that opens and closes the block below it. */
+.collapse-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+	color: inherit;
+	font-family: inherit;
+	font-size: 16px;
+	font-weight: 500;
+	text-align: left;
+}

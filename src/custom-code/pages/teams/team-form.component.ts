@@ -83,6 +83,24 @@ export const openTeamModal = (modal: ModalService, translator: Translator, teamI
 		.application-row po-button {
 			margin-bottom: 12px;
 		}
+		@media (max-width: 600px) {
+			.application-row {
+				grid-template-columns: minmax(0, 1fr) auto;
+				gap: 0 8px;
+				padding: 12px;
+				margin-bottom: 12px;
+				border: 1px solid var(--grey-4);
+				border-radius: 8px;
+			}
+			.application-row .field {
+				grid-column: 1;
+			}
+			.application-row po-button {
+				grid-column: 2;
+				grid-row: 1;
+				align-self: start;
+			}
+		}
 	`,
 	template: `
 		<div class="field">

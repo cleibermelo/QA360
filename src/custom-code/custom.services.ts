@@ -3,6 +3,7 @@ import { I18nService, USER } from '@polygon/core';
 import { CoverageRepository } from './data/coverage.repository';
 import { CoverageStore } from './data/coverage.store';
 import { SupabaseCoverageRepository } from './data/supabase-coverage.repository';
+import { saveDashboardFiltersForReload } from './shared/dashboard-filters-memory';
 import { FeedbackService } from './shared/feedback.service';
 import { Translator } from './shared/translator.service';
 
@@ -32,6 +33,7 @@ const provideLanguageSupport = (): EnvironmentProviders =>
 		i18n.currentLocale$.subscribe(() => {
 			if (user.culture !== startCulture) {
 				localStorage.setItem(LANGUAGE_STORAGE_KEY, user.culture);
+				saveDashboardFiltersForReload();
 				location.reload();
 			}
 		});

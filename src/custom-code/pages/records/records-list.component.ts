@@ -18,6 +18,11 @@ import { RecordsDataSource } from './records.datasource';
 			min-height: 400px;
 			padding: 24px;
 		}
+		@media (max-width: 600px) {
+			:host {
+				padding: 8px;
+			}
+		}
 	`,
 	template: `<po-datagrid-viewer-all-data />`
 })

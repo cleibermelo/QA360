@@ -25,6 +25,7 @@
 	"RES_Dashboard_SelectApplications": "Select at least one application to see the chart.",
 	"RES_Dashboard_SelectTestType": "Select the test type to see the chart.",
 	"RES_Dashboard_From": "From",
+	"RES_Dashboard_Reset": "Reset",
 	"RES_Dashboard_SelectPeriod": "Select the start and end months to see the chart.",
 	"RES_Dashboard_To": "To",
 	"RES_Dashboard_InvalidRange": "The start month must not be after the end month.",

@@ -21,6 +21,8 @@ interface RecordRow {
 	period: string;
 	application: string;
 	testType: string;
+	/** Phones show one column instead of two. */
+	applicationAndType: string;
 	percent: number;
 	note: string;
 	updatedAt: string;
@@ -100,6 +102,9 @@ export class RecordsDataSource extends MinSearchDataSource {
 	/** Builds the grid configuration in code instead of loading it from a JSON file. */
 	protected override async setDatagridOptions(): Promise<void> {
 		const t = (key: string): string => this.translator.t(key);
+		// Phones only fit the essential columns; the hidden ones stay searchable or in the edit form.
+		const compact = window.matchMedia('(max-width: 600px)').matches;
+		const hiddenOnPhone = ['team', 'note', 'updatedAt', 'application', 'testType'];
 		this.options = {
 			id: 'qa360-records',
 			title: t('Title_Records'),
@@ -112,7 +117,12 @@ export class RecordsDataSource extends MinSearchDataSource {
 			],
 			columnOptions: [
 				{ title: t('Common_Team'), field: 'team', type: ColumnTypeEnum.Text, sortable: true },
-				{ title: t('Records_Period'), field: 'period', type: ColumnTypeEnum.Text },
+				{
+					title: t('Records_Period'),
+					field: 'period',
+					type: ColumnTypeEnum.Text,
+					width: compact ? 80 : undefined
+				},
 				{
 					title: t('Common_Application'),
 					field: 'application',
@@ -122,6 +132,13 @@ export class RecordsDataSource extends MinSearchDataSource {
 				},
 				{ title: t('Common_TestType'), field: 'testType', type: ColumnTypeEnum.Text, sortable: true },
 				{
+					title: t('Common_Application'),
+					field: 'applicationAndType',
+					type: ColumnTypeEnum.Text,
+					width: 170,
+					cellClick: 'editRecord'
+				},
+				{
 					title: `${t('Records_Coverage')} (%)`,
 					field: 'percent',
 					type: ColumnTypeEnum.Number,
@@ -130,7 +147,9 @@ export class RecordsDataSource extends MinSearchDataSource {
 				},
 				{ title: t('Records_Note'), field: 'note', type: ColumnTypeEnum.Text },
 				{ title: t('Records_UpdatedAt'), field: 'updatedAt', type: ColumnTypeEnum.Text }
-			],
+			].filter((column) =>
+				compact ? !hiddenOnPhone.includes(column.field) : column.field !== 'applicationAndType'
+			),
 			actions: [
 				// "Footer" actions are rendered by Polygon as the primary button in the page header.
 				{ title: t('Records_Create'), type: DatagridActionType.Footer, method: 'createRecord' },
@@ -181,6 +200,7 @@ export class RecordsDataSource extends MinSearchDataSource {
 			period: formatPeriod(e.year, e.month),
 			application: application?.name ?? e.applicationId,
 			testType: this.translator.testTypeName(e.testTypeKey),
+			applicationAndType: `${application?.name ?? e.applicationId} · ${this.translator.testTypeName(e.testTypeKey)}`,
 			percent: e.percent,
 			note: e.note || '—',
 			updatedAt: new Date(e.updatedAt).toLocaleString(this.translator.locale, {

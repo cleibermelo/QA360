@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
-import { MonthInputComponent, MultiSelectComponent, SingleSelectComponent } from '@polygon/components';
+import {
+	ButtonComponent,
+	ButtonOptions,
+	ButtonTypeEnum,
+	MonthInputComponent,
+	MultiSelectComponent,
+	SingleSelectComponent
+} from '@polygon/components';
 import { OutletEnum, ViewTitleService } from '@polygon/core';
 import { CoverageLineChartComponent } from '../../components/coverage-line-chart/coverage-line-chart.component';
 import { CoverageStore } from '../../data/coverage.store';
@@ -7,6 +14,7 @@ import { buildChartData, ChartData } from '../../domain/dashboard';
 import { TeamPickerComponent } from '../../shared/team-picker.component';
 import { TranslatePipe } from '../../shared/translate.pipe';
 import { Translator } from '../../shared/translator.service';
+import { DashboardFiltersState } from './dashboard-filters.state';
 
 const EMPTY_CHART: ChartData = { labels: [], series: [] };
 
@@ -18,6 +26,7 @@ const EMPTY_CHART: ChartData = { labels: [], series: [] };
 		SingleSelectComponent,
 		MultiSelectComponent,
 		MonthInputComponent,
+		ButtonComponent,
 		CoverageLineChartComponent,
 		TranslatePipe
 	],
@@ -25,50 +34,53 @@ const EMPTY_CHART: ChartData = { labels: [], series: [] };
 	styleUrl: '../page.scss',
 	template: `
 		<section class="page-section">
-			<div class="filters">
-				<app-team-picker />
-				<div class="field application-field">
-					<span class="label">{{ 'Common_Application' | translate }}</span>
-					<po-multi-select
-						[class.has-selection]="applicationIds().length > 0"
-						[defaultData]="{ data: applicationOptions() }"
-						valueKey="id"
-						labelKey="name"
-						[placeholder]="'Dashboard_ApplicationsPlaceholder' | translate"
-						[ariaLabel]="'Common_Application' | translate"
-						[selectedValue]="applicationIds()"
-						(selectedValueChange)="applicationIds.set($any($event))" />
-				</div>
-				<div class="field">
-					<span class="label">{{ 'Common_TestType' | translate }}</span>
-					@for (reset of [typeSelectReset()]; track reset) {
-						<po-single-select
-							[defaultData]="{ data: typeOptions() }"
-							valueKey="key"
+			@for (key of [filtersKey()]; track key) {
+				<div class="filters">
+					<app-team-picker />
+					<div class="field application-field">
+						<span class="label">{{ 'Common_Application' | translate }}</span>
+						<po-multi-select
+							[class.has-selection]="applicationIds().length > 0"
+							[defaultData]="{ data: applicationOptions() }"
+							valueKey="id"
 							labelKey="name"
-							[placeholder]="'Common_SelectTestType' | translate"
-							[ariaLabel]="'Common_TestType' | translate"
-							[selectedValue]="typeKey()"
-							(selectedValueChange)="typeKey.set($any($event))" />
-					}
-				</div>
-				<div class="period">
-					<div class="field">
-						<span class="label">{{ 'Dashboard_From' | translate }}</span>
-						<po-month-input
-							[value]="from()"
-							(valueChange)="setFrom($event)"
-							[ariaLabel]="'Dashboard_From' | translate" />
+							[placeholder]="'Dashboard_ApplicationsPlaceholder' | translate"
+							[ariaLabel]="'Common_Application' | translate"
+							[selectedValue]="applicationIds()"
+							(selectedValueChange)="applicationIds.set($any($event))" />
 					</div>
 					<div class="field">
-						<span class="label">{{ 'Dashboard_To' | translate }}</span>
-						<po-month-input
-							[value]="to()"
-							(valueChange)="setTo($event)"
-							[ariaLabel]="'Dashboard_To' | translate" />
+						<span class="label">{{ 'Common_TestType' | translate }}</span>
+						@for (reset of [typeSelectReset()]; track reset) {
+							<po-single-select
+								[defaultData]="{ data: typeOptions() }"
+								valueKey="key"
+								labelKey="name"
+								[placeholder]="'Common_SelectTestType' | translate"
+								[ariaLabel]="'Common_TestType' | translate"
+								[selectedValue]="typeKey()"
+								(selectedValueChange)="typeKey.set($any($event))" />
+						}
 					</div>
+					<div class="period">
+						<div class="field">
+							<span class="label">{{ 'Dashboard_From' | translate }}</span>
+							<po-month-input
+								[value]="from()"
+								(valueChange)="setFrom($event)"
+								[ariaLabel]="'Dashboard_From' | translate" />
+						</div>
+						<div class="field">
+							<span class="label">{{ 'Dashboard_To' | translate }}</span>
+							<po-month-input
+								[value]="to()"
+								(valueChange)="setTo($event)"
+								[ariaLabel]="'Dashboard_To' | translate" />
+						</div>
+					</div>
+					<po-button [options]="clearButton" (action)="clearFilters()" />
 				</div>
-			</div>
+			}
 		</section>
 
 		<section class="page-section">
@@ -91,33 +103,44 @@ const EMPTY_CHART: ChartData = { labels: [], series: [] };
 
 		@if (data().series.length > 0) {
 			<section class="page-section">
-				<h3>{{ 'Dashboard_Values' | translate }}</h3>
-				<table class="data-table">
-					<thead>
-						<tr>
-							<th>{{ 'Dashboard_MonthYear' | translate }}</th>
-							@for (s of data().series; track s.name) {
-								<th class="number">{{ s.name }}</th>
-							}
-						</tr>
-					</thead>
-					<tbody>
-						@for (label of data().labels; track label; let i = $index) {
+				<h3>
+					<button
+						type="button"
+						class="collapse-toggle"
+						[attr.aria-expanded]="valuesOpen()"
+						(click)="valuesOpen.set(!valuesOpen())">
+						<span>{{ 'Dashboard_Values' | translate }}</span>
+						<span [class]="valuesOpen() ? 'icon-expand_less' : 'icon-expand_more'"></span>
+					</button>
+				</h3>
+				@if (valuesOpen()) {
+					<table class="data-table">
+						<thead>
 							<tr>
-								<td>{{ label }}</td>
+								<th>{{ 'Dashboard_MonthYear' | translate }}</th>
 								@for (s of data().series; track s.name) {
-									<td class="number">
-										@if (s.values[i] !== null) {
-											{{ s.values[i] }}%
-										} @else {
-											<span class="muted">—</span>
-										}
-									</td>
+									<th class="number">{{ s.name }}</th>
 								}
 							</tr>
-						}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							@for (label of data().labels; track label; let i = $index) {
+								<tr>
+									<td>{{ label }}</td>
+									@for (s of data().series; track s.name) {
+										<td class="number">
+											@if (s.values[i] !== null) {
+												{{ s.values[i] }}%
+											} @else {
+												<span class="muted">—</span>
+											}
+										</td>
+									}
+								</tr>
+							}
+						</tbody>
+					</table>
+				}
 			</section>
 		}
 	`
@@ -125,18 +148,28 @@ const EMPTY_CHART: ChartData = { labels: [], series: [] };
 export class DashboardComponent {
 	protected readonly store = inject(CoverageStore);
 	private readonly translator = inject(Translator);
+	private readonly filters = inject(DashboardFiltersState);
 
+	// The filters live in a service, so they are still there when the user leaves the Dashboard and comes back.
 	/** Selected applications; the chart only shows them, so none selected means no chart. */
-	protected readonly applicationIds = signal<string[]>([]);
-	protected readonly typeKey = signal('');
+	protected readonly applicationIds = this.filters.applicationIds;
+	protected readonly typeKey = this.filters.typeKey;
+	/** The table with the plotted values starts collapsed; the arrow in its title opens it. */
+	protected readonly valuesOpen = this.filters.valuesOpen;
 	/** Month range (`YYYY-MM`); the chart is only built once both ends are filled. */
-	protected readonly from = signal('');
-	protected readonly to = signal('');
+	protected readonly from = this.filters.from;
+	protected readonly to = this.filters.to;
 	protected readonly rangeIsInverted = computed(
 		() => this.from() !== '' && this.to() !== '' && this.from() > this.to()
 	);
 	/** The select does not clear its text when the value is reset, so a new key makes it render again. */
 	protected readonly typeSelectReset = signal(0);
+	/** Clearing the filters renders them all again, because the selects do not clear their text by themselves. */
+	protected readonly filtersKey = signal(0);
+	protected readonly clearButton = new ButtonOptions({
+		text: this.translator.t('Dashboard_Reset'),
+		type: ButtonTypeEnum.Text
+	});
 
 	/** Applications of the selected team. */
 	protected readonly applicationOptions = computed(() => this.store.selectedTeam()?.applications ?? []);
@@ -167,8 +200,6 @@ export class DashboardComponent {
 			outlet: OutletEnum.Primary,
 			title: this.translator.t('Title_Dashboard')
 		});
-		// The store outlives the page, so the team is cleared on every visit: the user picks it again.
-		this.store.selectedTeamId.set('');
 		// Drops selected applications that no longer exist (team changed or application removed).
 		effect(() => {
 			const existing = this.applicationOptions().map((a) => a.id);
@@ -188,6 +219,12 @@ export class DashboardComponent {
 				this.typeKey.set('');
 			}
 		});
+	}
+
+	/** Empties every filter, which also empties the chart. */
+	protected clearFilters(): void {
+		this.filters.reset();
+		this.filtersKey.update((n) => n + 1);
 	}
 
 	/** The month input also emits partial or invalid text while typing; only complete months count. */

@@ -107,6 +107,44 @@ interface RecordRow {
 			display: block;
 			margin-top: 12px;
 		}
+		.cell {
+			min-width: 0;
+		}
+		.cell-label {
+			display: none;
+		}
+		/* Phones: each line becomes a card with labelled fields and no column header. */
+		@media (max-width: 600px) {
+			.top {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px;
+				margin-bottom: 16px;
+			}
+			.top .field:first-child {
+				grid-column: 1 / -1;
+			}
+			.line.header {
+				display: none;
+			}
+			.line {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 8px 12px;
+				padding: 12px;
+				border: 1px solid var(--grey-4);
+				border-radius: 8px;
+			}
+			.cell.wide {
+				grid-column: 1 / -1;
+			}
+			.cell-label {
+				display: block;
+				margin-bottom: 4px;
+			}
+			.cell.remove {
+				grid-column: 1 / -1;
+				justify-self: end;
+			}
+		}
 	`,
 	template: `
 		@if (hintOpen()) {
@@ -162,23 +200,30 @@ interface RecordRow {
 			}
 			@for (row of rows(); track row.key; let i = $index) {
 				<div class="line">
-					<po-single-select
-						[defaultData]="{ data: applications() }"
-						valueKey="id"
-						labelKey="name"
-						[placeholder]="'Records_SelectApplication' | translate"
-						[ariaLabel]="('Common_Application' | translate) + ' ' + (i + 1)"
-						[selectedValue]="row.applicationId"
-						(selectedValueChange)="onApplicationChange(row.key, $any($event))" />
-					<po-single-select
-						[defaultData]="{ data: row.typeOptions }"
-						valueKey="key"
-						labelKey="name"
-						[placeholder]="'Common_SelectTestType' | translate"
-						[ariaLabel]="('Common_TestType' | translate) + ' ' + (i + 1)"
-						[selectedValue]="row.typeKey"
-						(selectedValueChange)="update(row.key, { typeKey: $any($event) })" />
-					<div>
+					<div class="cell wide">
+						<span class="label cell-label">{{ 'Common_Application' | translate }}</span>
+						<po-single-select
+							[defaultData]="{ data: applications() }"
+							valueKey="id"
+							labelKey="name"
+							[placeholder]="'Records_SelectApplication' | translate"
+							[ariaLabel]="('Common_Application' | translate) + ' ' + (i + 1)"
+							[selectedValue]="row.applicationId"
+							(selectedValueChange)="onApplicationChange(row.key, $any($event))" />
+					</div>
+					<div class="cell">
+						<span class="label cell-label">{{ 'Common_TestType' | translate }}</span>
+						<po-single-select
+							[defaultData]="{ data: row.typeOptions }"
+							valueKey="key"
+							labelKey="name"
+							[placeholder]="'Common_SelectTestType' | translate"
+							[ariaLabel]="('Common_TestType' | translate) + ' ' + (i + 1)"
+							[selectedValue]="row.typeKey"
+							(selectedValueChange)="update(row.key, { typeKey: $any($event) })" />
+					</div>
+					<div class="cell">
+						<span class="label cell-label">{{ 'Records_Coverage' | translate }} (%)</span>
 						<po-numeric-input
 							[options]="percentOptions"
 							[value]="row.percent"
@@ -188,12 +233,17 @@ interface RecordRow {
 							<span class="unit">{{ unitOf(row.typeKey) }}</span>
 						}
 					</div>
-					<po-input
-						[value]="row.note"
-						(valueChange)="update(row.key, { note: $event })"
-						[options]="noteOptions"
-						[ariaLabel]="('Records_Note' | translate) + ' ' + (i + 1)" />
-					<po-button [options]="removeButton" (action)="remove(row.key)" />
+					<div class="cell wide">
+						<span class="label cell-label">{{ 'Records_Note' | translate }}</span>
+						<po-input
+							[value]="row.note"
+							(valueChange)="update(row.key, { note: $event })"
+							[options]="noteOptions"
+							[ariaLabel]="('Records_Note' | translate) + ' ' + (i + 1)" />
+					</div>
+					<div class="cell remove">
+						<po-button [options]="removeButton" (action)="remove(row.key)" />
+					</div>
 				</div>
 			}
 			<po-button class="add" [options]="addButton" (action)="add()" />

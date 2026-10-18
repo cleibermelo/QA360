@@ -25,6 +25,7 @@
 	"RES_Dashboard_SelectApplications": "Sélectionnez au moins une application pour voir le graphique.",
 	"RES_Dashboard_SelectTestType": "Sélectionnez le type de test pour voir le graphique.",
 	"RES_Dashboard_From": "De",
+	"RES_Dashboard_Reset": "Réinitialiser",
 	"RES_Dashboard_SelectPeriod": "Sélectionnez le mois de début et le mois de fin pour voir le graphique.",
 	"RES_Dashboard_To": "À",
 	"RES_Dashboard_InvalidRange": "Le mois de début ne peut pas être postérieur au mois de fin.",

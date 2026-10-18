@@ -64,6 +64,11 @@ export const openRecordModal = (modal: ModalService, translator: Translator, ent
 			padding: 6px 0;
 			color: var(--grey-9);
 		}
+		@media (max-width: 600px) {
+			.grid {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
 	`,
 	template: `
 		<div class="grid">

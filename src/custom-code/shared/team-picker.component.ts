@@ -19,6 +19,14 @@ import { TranslatePipe } from './translate.pipe';
 			font-size: 12px;
 			color: var(--grey-8);
 		}
+		@media (max-width: 600px) {
+			:host {
+				display: block;
+			}
+			.field {
+				min-width: 0;
+			}
+		}
 	`,
 	template: `
 		<div class="field">

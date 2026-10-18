@@ -31,6 +31,11 @@ const SERIES_COLORS = ['--chart-1', '--secondary-80', '--success-80', '--chart-1
 			position: relative;
 			height: 360px;
 		}
+		@media (max-width: 600px) {
+			:host {
+				height: 280px;
+			}
+		}
 	`,
 	template: `<canvas #canvas role="img" [attr.aria-label]="translator.t('Chart_AriaLabel')"></canvas>`
 })
