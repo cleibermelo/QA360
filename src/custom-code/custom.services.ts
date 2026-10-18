@@ -1,5 +1,16 @@
-import { effect, EnvironmentProviders, inject, provideEnvironmentInitializer, Provider } from '@angular/core';
+import {
+	effect,
+	EnvironmentProviders,
+	inject,
+	Injector,
+	provideEnvironmentInitializer,
+	Provider,
+	untracked
+} from '@angular/core';
 import { I18nService, USER } from '@polygon/core';
+import { SessionService } from './auth/session.service';
+import { provideSignedOutChrome } from './auth/signed-out-chrome';
+import { provideUserAreaIdentity } from './auth/polygon-user-area';
 import { CoverageRepository } from './data/coverage.repository';
 import { CoverageStore } from './data/coverage.store';
 import { SupabaseCoverageRepository } from './data/supabase-coverage.repository';
@@ -71,16 +82,33 @@ const provideSubpathAssetFix = (): EnvironmentProviders =>
 		}).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
 	});
 
-/** Stores the data in Supabase and tells the user when it cannot be loaded. */
+/** Stores the data in Supabase, loads it once the user is signed in, and tells the user when it cannot be loaded. */
 const provideCoverageData = (): (Provider | EnvironmentProviders)[] => [
 	{ provide: CoverageRepository, useClass: SupabaseCoverageRepository },
 	provideEnvironmentInitializer(() => {
-		// Creating the store here starts the first load while the app is still starting.
-		const store = inject(CoverageStore);
+		const session = inject(SessionService);
+		const injector = inject(Injector);
 		const feedback = inject(FeedbackService);
 		const translator = inject(Translator);
+		let started = false;
+		// Creating the store starts its first load, so it must not exist before there is a session.
 		effect(() => {
-			const key = store.loadError();
+			if (!session.userId()) {
+				return;
+			}
+			untracked(() => {
+				const store = injector.get(CoverageStore);
+				if (started) {
+					void store.reload();
+				}
+				started = true;
+			});
+		});
+		effect(() => {
+			if (!session.userId()) {
+				return;
+			}
+			const key = untracked(() => injector.get(CoverageStore)).loadError();
 			if (key) {
 				feedback.error(translator.t(key));
 			}
@@ -95,5 +123,7 @@ const provideCoverageData = (): (Provider | EnvironmentProviders)[] => [
 export const customMainServices: (Provider | EnvironmentProviders)[] = [
 	provideLanguageSupport(),
 	provideSubpathAssetFix(),
+	provideUserAreaIdentity(),
+	provideSignedOutChrome(),
 	...provideCoverageData()
 ];

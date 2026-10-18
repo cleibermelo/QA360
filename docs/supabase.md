@@ -1,6 +1,6 @@
 # QA360 - Supabase
 
-Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região eu-west-1). Equipes, aplicações, registros e histórico são lidos e gravados no banco. Sem login por enquanto.
+Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região eu-west-1). Equipes, aplicações, registros e histórico são lidos e gravados no banco. O acesso às telas exige login (Supabase Auth, e-mail e senha, contas por convite).
 
 ## Arquivos
 
@@ -9,7 +9,8 @@ Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região e
 | `supabase/schema.sql`                                   | Cria as tabelas, restrições, gatilho de histórico, dados iniciais (tipos de teste, equipe TOCT e 4 aplicações) e liga RLS com acesso para usuários autenticados. Pode rodar mais de uma vez. |
 | `supabase/dev-anon-policies.sql`                        | **Só desenvolvimento.** Libera leitura e escrita para quem não está logado. Tem o bloco para remover no final.                                                                               |
 | `supabase/migrate-test-types.sql`                       | Migra um banco criado com a lista antiga de tipos de teste (e2e_api, e2e_ui, contract, security) para a atual. Rodar uma vez.                                                                |
-| `src/custom-code/data/supabase.config.ts`               | URL do projeto e chave pública (publishable).                                                                                                                                                |
+| `src/custom-code/environments/**/*.json`                | Bloco `supabase` (URL, chave pública e tamanho mínimo da senha) lido em tempo de execução.                                                                                              |
+| `src/custom-code/auth/`                                 | Cliente único do Supabase, sessão e proteção das rotas.                                                                                                                                      |
 | `src/custom-code/data/coverage.repository.ts`           | Contrato de armazenamento que o store usa.                                                                                                                                                   |
 | `src/custom-code/data/supabase-coverage.repository.ts`  | Implementação com `@supabase/supabase-js`.                                                                                                                                                   |
 | `src/custom-code/data/in-memory-coverage.repository.ts` | Implementação em memória, usada só nos testes unitários.                                                                                                                                     |
@@ -35,7 +36,7 @@ Continuam validados no app (não dá para expressar como constraint simples): "t
 - O repositório do app é escolhido em `src/custom-code/custom.services.ts` (`CoverageRepository` → `SupabaseCoverageRepository`).
 - Salvar uma equipe faz vários pedidos em sequência (equipe, aplicações, tipos de teste). Se um falhar no meio, o app recarrega e mostra o que de fato ficou salvo.
 - Falha ao carregar ou gravar mostra uma mensagem (toast) nos 4 idiomas.
-- Cliente criado sem sessão (`persistSession: false`), já que não há login.
+- Cliente único (`auth/supabase.client.ts`) com sessão guardada pelo `supabase-js`; os pedidos de dados usam o token do usuário logado. Os dados só são carregados depois do login.
 
 ## Segurança (importante)
 
@@ -43,14 +44,14 @@ A chave publishable fica no código do navegador por desenho. O que protege os d
 
 Antes de usar dados reais:
 
-1. Implementar login (Supabase Auth ou o provedor corporativo).
+1. Login: **feito** (e-mail e senha). Falta só o passo 2.
 2. Remover as policies `anon` (bloco comentado no fim de `supabase/dev-anon-policies.sql`). As policies para `authenticated` do `schema.sql` já cobrem os usuários logados.
 
 Nunca coloque a chave `service_role` / secret no código do app.
 
 ## Pendências e decisões
 
-1. **Login** (acima).
-2. **Um banco ou um por ambiente** (dv, st, pd): hoje a URL e a chave estão fixas em `supabase.config.ts`.
+1. **Login**: implementado; falta remover as policies `anon`.
+2. **Um banco ou um por ambiente** (dv, st, pd): a URL e a chave ficam no bloco `supabase` de cada arquivo de ambiente; dv, st e sx estão vazios.
 3. **Plano gratuito**: projetos sem uso por cerca de uma semana são pausados e precisam ser reativados no painel.
 4. Salvar equipe não é uma transação única; se virar problema, trocar por uma função SQL (RPC) que faça tudo de uma vez.

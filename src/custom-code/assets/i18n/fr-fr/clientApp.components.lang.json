@@ -3,6 +3,26 @@
 	"RES_Menu_Records": "Enregistrements",
 	"RES_Menu_Teams": "Équipes",
 
+
+	"RES_Login_Title": "Connexion",
+	"RES_Login_Welcome": "Bienvenue sur QA360",
+	"RES_Login_Subtitle": "Utilisez l'e-mail et le mot de passe de votre compte.",
+	"RES_Login_Email": "E-mail",
+	"RES_Login_Password": "Mot de passe",
+	"RES_Login_Submit": "Se connecter",
+	"RES_Login_Confirm": "Confirmer",
+	"RES_Login_ErrorCredentials": "E-mail ou mot de passe invalide.",
+	"RES_Login_ErrorUnavailable": "Le service n'est pas disponible. Réessayez dans un instant.",
+
+	"RES_SetPassword_Title": "Définissez votre mot de passe",
+	"RES_SetPassword_Hint": "Choisissez le mot de passe de votre premier accès. Il doit contenir au moins {count} caractères.",
+	"RES_SetPassword_New": "Nouveau mot de passe",
+	"RES_SetPassword_Confirm": "Confirmez le mot de passe",
+	"RES_SetPassword_Submit": "Enregistrer le mot de passe",
+	"RES_SetPassword_ErrorTooShort": "Le mot de passe doit contenir au moins {count} caractères.",
+	"RES_SetPassword_ErrorMismatch": "Les mots de passe ne correspondent pas.",
+	"RES_SetPassword_ErrorGeneric": "Le mot de passe n'a pas pu être enregistré. Réessayez ou demandez une nouvelle invitation.",
+
 	"RES_Title_Dashboard": "Tableau de bord",
 	"RES_Title_Records": "Enregistrements",
 	"RES_Title_Teams": "Équipes",

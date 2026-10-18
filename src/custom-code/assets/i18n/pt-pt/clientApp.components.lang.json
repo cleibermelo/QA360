@@ -3,6 +3,26 @@
 	"RES_Menu_Records": "Registos",
 	"RES_Menu_Teams": "Equipas",
 
+
+	"RES_Login_Title": "Iniciar sessão",
+	"RES_Login_Welcome": "Bem-vindo ao QA360",
+	"RES_Login_Subtitle": "Use o e-mail e a palavra-passe da sua conta.",
+	"RES_Login_Email": "E-mail",
+	"RES_Login_Password": "Palavra-passe",
+	"RES_Login_Submit": "Iniciar sessão",
+	"RES_Login_Confirm": "Confirmar",
+	"RES_Login_ErrorCredentials": "E-mail ou palavra-passe inválidos.",
+	"RES_Login_ErrorUnavailable": "O serviço não está disponível. Tente novamente dentro de instantes.",
+
+	"RES_SetPassword_Title": "Defina a sua palavra-passe",
+	"RES_SetPassword_Hint": "Escolha a palavra-passe do seu primeiro acesso. Deve ter pelo menos {count} caracteres.",
+	"RES_SetPassword_New": "Nova palavra-passe",
+	"RES_SetPassword_Confirm": "Confirme a palavra-passe",
+	"RES_SetPassword_Submit": "Guardar palavra-passe",
+	"RES_SetPassword_ErrorTooShort": "A palavra-passe deve ter pelo menos {count} caracteres.",
+	"RES_SetPassword_ErrorMismatch": "As palavras-passe não coincidem.",
+	"RES_SetPassword_ErrorGeneric": "Não foi possível guardar a palavra-passe. Tente novamente ou peça um novo convite.",
+
 	"RES_Title_Dashboard": "Painel",
 	"RES_Title_Records": "Registos",
 	"RES_Title_Teams": "Equipas",

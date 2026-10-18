@@ -43,7 +43,7 @@
 	},
 	"userAreaMenu": {
 		"userProfile": {
-			"hide": false,
+			"hide": true,
 			"claims": []
 		},
 		"subscriptionUsersButton": {

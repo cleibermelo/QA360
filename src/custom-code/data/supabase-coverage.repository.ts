@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { createClient, PostgrestError, SupabaseClient } from '@supabase/supabase-js';
+import { Injectable, inject } from '@angular/core';
+import { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
+import { SUPABASE_CLIENT } from '../auth/supabase.client';
 import { CoverageEntry, CoverageInput, Team, TeamInput, TestType } from '../domain/models';
 import { SEED_TEST_TYPES } from '../domain/seed';
 import { CoverageRepository, CoverageSnapshot, EntryKey, RepositoryError } from './coverage.repository';
-import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './supabase.config';
 
 /** Postgres code for a unique constraint violation. */
 const UNIQUE_VIOLATION = '23505';
@@ -40,10 +40,8 @@ interface EntryRow {
 /** Stores the data in the Supabase project (tables in supabase/schema.sql). */
 @Injectable()
 export class SupabaseCoverageRepository extends CoverageRepository {
-	// No login yet, so no session to keep or refresh.
-	private readonly client: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-		auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-	});
+	// Shared with the session, so requests carry the signed-in user's token.
+	private readonly client: SupabaseClient = inject(SUPABASE_CLIENT);
 
 	async load(): Promise<CoverageSnapshot> {
 		const [types, teams, entries] = await Promise.all([

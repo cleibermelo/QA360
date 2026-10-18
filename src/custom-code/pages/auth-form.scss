@@ -1,0 +1,60 @@
+:host {
+	display: flex;
+	justify-content: center;
+	padding: 24px;
+}
+
+.auth-card {
+	width: 100%;
+	max-width: 420px;
+	background: var(--grey-1);
+	border: 1px solid var(--grey-4);
+	border-radius: 8px;
+	padding: 24px;
+}
+
+h3 {
+	margin: 0 0 4px;
+	color: var(--grey-9);
+}
+
+.hint {
+	margin: 0 0 16px;
+	color: var(--grey-8);
+}
+
+.message {
+	display: block;
+	margin-bottom: 16px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-bottom: 16px;
+
+	.label {
+		font-size: 12px;
+		color: var(--grey-8);
+	}
+
+	.required::after {
+		content: ' *';
+		color: var(--error-100);
+	}
+}
+
+.submit {
+	display: block;
+}
+
+@media (max-width: 600px) {
+	:host {
+		padding: 12px;
+	}
+
+	.auth-card {
+		padding: 16px;
+	}
+}

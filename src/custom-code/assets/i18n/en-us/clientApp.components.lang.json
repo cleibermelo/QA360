@@ -3,6 +3,26 @@
 	"RES_Menu_Records": "Records",
 	"RES_Menu_Teams": "Teams",
 
+
+	"RES_Login_Title": "Sign in",
+	"RES_Login_Welcome": "Welcome to QA360",
+	"RES_Login_Subtitle": "Use the e-mail and password of your account.",
+	"RES_Login_Email": "E-mail",
+	"RES_Login_Password": "Password",
+	"RES_Login_Submit": "Sign in",
+	"RES_Login_Confirm": "Confirm",
+	"RES_Login_ErrorCredentials": "Invalid e-mail or password.",
+	"RES_Login_ErrorUnavailable": "The service is not available. Try again in a moment.",
+
+	"RES_SetPassword_Title": "Set your password",
+	"RES_SetPassword_Hint": "Choose the password for your first access. It must have at least {count} characters.",
+	"RES_SetPassword_New": "New password",
+	"RES_SetPassword_Confirm": "Confirm the password",
+	"RES_SetPassword_Submit": "Save password",
+	"RES_SetPassword_ErrorTooShort": "The password must have at least {count} characters.",
+	"RES_SetPassword_ErrorMismatch": "The passwords do not match.",
+	"RES_SetPassword_ErrorGeneric": "The password could not be saved. Try again or ask for a new invite.",
+
 	"RES_Title_Dashboard": "Dashboard",
 	"RES_Title_Records": "Records",
 	"RES_Title_Teams": "Teams",

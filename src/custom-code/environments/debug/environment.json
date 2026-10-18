@@ -4,6 +4,11 @@
   "production": false,
   "productName": "QA360",
   "version": "v1",
+  "supabase": {
+    "url": "https://vqozovkvyqdqrztmbypy.supabase.co",
+    "anonKey": "sb_publishable_jeKWGaA6tfiviUCQJFJaMQ_WiskXHkA",
+    "passwordMinLength": 6
+  },
   "pushNotifications": {
     "endpoint": ""
   },
