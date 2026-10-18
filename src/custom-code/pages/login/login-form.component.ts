@@ -38,15 +38,14 @@ export const openLoginModal = (modal: ModalService, translator: Translator): voi
 		:host {
 			display: block;
 		}
-		.hint {
-			margin: 0 0 16px;
-			color: var(--grey-8);
-		}
 		.field {
 			display: flex;
 			flex-direction: column;
 			gap: 4px;
 			margin-bottom: 16px;
+		}
+		.field:last-child {
+			margin-bottom: 0;
 		}
 		.label {
 			font-size: 12px;
@@ -58,7 +57,6 @@ export const openLoginModal = (modal: ModalService, translator: Translator): voi
 		}
 	`,
 	template: `
-		<p class="hint">{{ 'Login_Subtitle' | translate }}</p>
 		<div class="field">
 			<span class="label required">{{ 'Login_Email' | translate }}</span>
 			<po-input

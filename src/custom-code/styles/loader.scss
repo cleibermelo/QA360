@@ -25,6 +25,13 @@ body.qapulse-auth-locked .page-container-content {
 	margin-left: 0 !important;
 }
 
+/* The sign-in form has two fields, so the modal is narrower than the smallest Polygon size. */
+.modal-container.qapulse-login {
+  width: 400px !important;
+  min-width: 0 !important;
+  max-width: calc(100vw - 32px) !important;
+}
+
 /* The top right "Sign in" button gives way while the sign-in form is open. */
 body:has(.modal-container.qapulse-login) app-sign-in-button {
 	display: none;
