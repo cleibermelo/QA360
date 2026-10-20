@@ -42,7 +42,9 @@ export const createSonarClient = ({ token, fetchImpl = fetch, retryDelayMs = 100
 		for (let attempt = 0; ; attempt++) {
 			let response;
 			try {
-				response = await fetchImpl(url, { headers: { Authorization: authorization, Accept: 'application/json' } });
+				response = await fetchImpl(url, {
+					headers: { Authorization: authorization, Accept: 'application/json' }
+				});
 			} catch (error) {
 				if (attempt < RETRIES) {
 					await sleep(retryDelayMs * (attempt + 1));

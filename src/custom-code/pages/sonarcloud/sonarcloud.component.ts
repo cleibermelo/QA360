@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { MonthInputComponent, MultiSelectComponent } from '@polygon/components';
+import {
+	ButtonColorEnum,
+	ButtonComponent,
+	ButtonOptions,
+	ButtonTypeEnum,
+	MonthInputComponent,
+	MultiSelectComponent
+} from '@polygon/components';
 import { OutletEnum, ViewTitleService } from '@polygon/core';
 import { CoverageLineChartComponent } from '../../components/coverage-line-chart/coverage-line-chart.component';
 import { SonarCoverageService, SonarProject } from '../../data/sonar-coverage.service';
@@ -7,6 +14,7 @@ import { ChartData, ChartSeries } from '../../domain/dashboard';
 import { MonthlyCoverage, monthRange, monthStart } from '../../domain/sonar-coverage';
 import { TranslatePipe } from '../../shared/translate.pipe';
 import { Translator } from '../../shared/translator.service';
+import { SonarcloudFiltersState } from './sonarcloud-filters.state';
 
 /** The chart theme has this many distinct line colors; beyond it they repeat. */
 const PALETTE_SIZE = 6;
@@ -28,7 +36,7 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 /** Coverage that the daily job copies from SonarCloud: project and period filters, the month table and the chart. */
 @Component({
 	selector: 'app-sonarcloud',
-	imports: [MultiSelectComponent, MonthInputComponent, CoverageLineChartComponent, TranslatePipe],
+	imports: [MultiSelectComponent, MonthInputComponent, ButtonComponent, CoverageLineChartComponent, TranslatePipe],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	styleUrl: '../page.scss',
 	styles: `
@@ -52,36 +60,39 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 	`,
 	template: `
 		<section class="page-section">
-			<div class="filters">
-				<div class="field project-field">
-					<span class="label">{{ 'Sonar_Project' | translate }}</span>
-					<po-multi-select
-						[class.has-selection]="projectKeys().length > 0"
-						[defaultData]="{ data: projects() }"
-						valueKey="key"
-						labelKey="name"
-						[placeholder]="'Sonar_ProjectPlaceholder' | translate"
-						[ariaLabel]="'Sonar_Project' | translate"
-						[selectedValue]="projectKeys()"
-						(selectedValueChange)="selectProjects($any($event))" />
-				</div>
-				<div class="period">
-					<div class="field">
-						<span class="label">{{ 'Dashboard_From' | translate }}</span>
-						<po-month-input
-							[value]="from()"
-							(valueChange)="setFrom($event)"
-							[ariaLabel]="'Dashboard_From' | translate" />
+			@for (key of [filtersKey()]; track key) {
+				<div class="filters">
+					<div class="field project-field">
+						<span class="label">{{ 'Sonar_Project' | translate }}</span>
+						<po-multi-select
+							[class.has-selection]="projectKeys().length > 0"
+							[defaultData]="{ data: projects() }"
+							valueKey="key"
+							labelKey="name"
+							[placeholder]="'Sonar_ProjectPlaceholder' | translate"
+							[ariaLabel]="'Sonar_Project' | translate"
+							[selectedValue]="projectKeys()"
+							(selectedValueChange)="selectProjects($any($event))" />
 					</div>
-					<div class="field">
-						<span class="label">{{ 'Dashboard_To' | translate }}</span>
-						<po-month-input
-							[value]="to()"
-							(valueChange)="setTo($event)"
-							[ariaLabel]="'Dashboard_To' | translate" />
+					<div class="period">
+						<div class="field">
+							<span class="label">{{ 'Dashboard_From' | translate }}</span>
+							<po-month-input
+								[value]="from()"
+								(valueChange)="setFrom($event)"
+								[ariaLabel]="'Dashboard_From' | translate" />
+						</div>
+						<div class="field">
+							<span class="label">{{ 'Dashboard_To' | translate }}</span>
+							<po-month-input
+								[value]="to()"
+								(valueChange)="setTo($event)"
+								[ariaLabel]="'Dashboard_To' | translate" />
+						</div>
 					</div>
+					<po-button [options]="clearButton" (action)="clearFilters()" />
 				</div>
-			</div>
+			}
 			@if (projectKeys().length > paletteSize) {
 				<p class="hint">{{ 'Sonar_ManyProjects' | translate: { count: paletteSize } }}</p>
 			}
@@ -165,21 +176,30 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 export class SonarcloudComponent implements OnInit {
 	private readonly service = inject(SonarCoverageService);
 	private readonly translator = inject(Translator);
+	private readonly filters = inject(SonarcloudFiltersState);
 
 	protected readonly paletteSize = PALETTE_SIZE;
 	protected readonly projects = signal<SonarProject[]>([]);
-	protected readonly projectKeys = signal<string[]>([]);
+	// The filters live in a service, so they are still there when the user leaves this page and comes back.
+	protected readonly projectKeys = this.filters.projectKeys;
 	protected readonly loading = signal(true);
 	/** True while the history of newly selected projects is being read. */
 	protected readonly busy = signal(false);
 	protected readonly loadError = signal(false);
+	/** The multi-select does not clear its chips by itself, so a new key renders the filters again. */
+	protected readonly filtersKey = signal(0);
+	protected readonly clearButton = new ButtonOptions({
+		text: this.translator.t('Dashboard_Reset'),
+		type: ButtonTypeEnum.Text,
+		color: ButtonColorEnum.Grey
+	});
 
 	/** Stored months of every project read so far, by project key. */
 	private readonly histories = signal<Record<string, MonthlyCoverage[]>>({});
 	// The filters follow the data of the selected projects until the user types a value (an empty string means cleared).
-	private readonly pickedFrom = signal<string | null>(null);
-	private readonly pickedTo = signal<string | null>(null);
-	private readonly pickedMonth = signal<string | null>(null);
+	private readonly pickedFrom = this.filters.pickedFrom;
+	private readonly pickedTo = this.filters.pickedTo;
+	private readonly pickedMonth = this.filters.pickedMonth;
 
 	/** First and last month (`YYYY-MM`) stored for the selected projects. */
 	private readonly bounds = computed(() => {
@@ -246,6 +266,16 @@ export class SonarcloudComponent implements OnInit {
 		} finally {
 			this.loading.set(false);
 		}
+		// Coming back to the page with projects already selected: reads their history again.
+		if (!this.loadError()) {
+			await this.selectProjects(this.projectKeys());
+		}
+	}
+
+	/** Empties every filter, which also empties the table and the chart. */
+	protected clearFilters(): void {
+		this.filters.reset();
+		this.filtersKey.update((n) => n + 1);
 	}
 
 	/** Reads the history of the projects that were not read yet; the filters then follow the data. */

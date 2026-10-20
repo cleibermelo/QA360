@@ -12,11 +12,11 @@ Acompanhamento mensal da cobertura de testes automatizados por equipe e aplicaç
 
 ## Telas
 
-| Menu      | Rota         | Função                                                                                            |
-| --------- | ------------ | ------------------------------------------------------------------------------------------------- |
-| Dashboard | `/dashboard` | Gráfico de linha e tabela de conferência por aplicação e tipo de teste                            |
-| Records   | `/records`   | Tabela de registros (datagrid, igual a Teams) com "Create record", editar, histórico e excluir    |
-| Teams     | `/teams`     | Lista de equipes (tabela do Polygon); criar e editar em modal (nome, aplicações e tipos de teste) |
+| Menu       | Rota          | Função                                                                                                                                                      |
+| ---------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dashboard  | `/dashboard`  | Gráfico de linha e tabela de conferência por aplicação e tipo de teste                                                                                      |
+| Records    | `/records`    | Tabela de registros (datagrid, igual a Teams) com "Create record", editar, histórico e excluir                                                              |
+| Teams      | `/teams`      | Lista de equipes (tabela do Polygon); criar e editar em modal (nome, aplicações e tipos de teste)                                                           |
 | SonarCloud | `/sonarcloud` | Cobertura de testes unitários vinda do SonarCloud: vários projetos, tabela do mês escolhido e gráfico por período (meses sem medição aparecem como lacunas) |
 
 O código, as rotas e os menus estão em inglês. Os textos das telas vêm dos arquivos de tradução (ver "Idiomas").
