@@ -14,6 +14,7 @@ export const SEED_TEAMS: Team[] = [
 	{
 		id: 'toct',
 		name: 'TOCT',
+		ownerName: '',
 		applications: [
 			{ id: 'apis', name: 'APIs', testTypeKeys: ['unit', 'integration', 'api'] },
 			{ id: 'usage', name: 'Usage', testTypeKeys: ['unit', 'integration'] },

@@ -19,6 +19,7 @@ const byTypeOrder = (a: string, b: string): number => typeRank(a) - typeRank(b) 
 interface TeamRow {
 	id: string;
 	name: string;
+	owner_name: string;
 	applications: {
 		id: string;
 		name: string;
@@ -46,7 +47,7 @@ export class SupabaseCoverageRepository extends CoverageRepository {
 	async load(): Promise<CoverageSnapshot> {
 		const [types, teams, entries] = await Promise.all([
 			this.client.from('test_types').select('key, active'),
-			this.client.from('teams').select('id, name, applications(id, name, application_test_types(test_type_key))'),
+			this.client.from('teams').select('id, name, owner_name, applications(id, name, application_test_types(test_type_key))'),
 			this.client
 				.from('coverage_entries')
 				.select(
@@ -64,6 +65,7 @@ export class SupabaseCoverageRepository extends CoverageRepository {
 			.map((t) => ({
 				id: t.id,
 				name: t.name,
+				ownerName: t.owner_name,
 				applications: t.applications
 					.map((a) => ({
 						id: a.id,
@@ -105,11 +107,18 @@ export class SupabaseCoverageRepository extends CoverageRepository {
 	/** Several requests in sequence: if one fails halfway, reloading shows what was actually saved. */
 	async saveTeam(input: TeamInput, existing: Team | undefined): Promise<string> {
 		const name = input.name.trim();
+		const ownerName = (input.ownerName ?? '').trim();
 		let teamId = existing?.id;
 		if (teamId) {
-			this.check(await this.client.from('teams').update({ name }).eq('id', teamId));
+			this.check(
+				await this.client.from('teams').update({ name, owner_name: ownerName }).eq('id', teamId)
+			);
 		} else {
-			const { data, error } = await this.client.from('teams').insert({ name }).select('id').single();
+			const { data, error } = await this.client
+				.from('teams')
+				.insert({ name, owner_name: ownerName })
+				.select('id')
+				.single();
 			this.check({ error });
 			teamId = data.id as string;
 		}

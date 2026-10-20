@@ -95,6 +95,7 @@
 	"RES_Records_ConfirmBatchText": "Ces enregistrements existent déjà pour {period} et seront modifiés : {list}. Les valeurs précédentes seront conservées dans l'historique.",
 
 	"RES_Teams_Create": "Créer une équipe",
+	"RES_Teams_ColOwner": "Responsable",
 	"RES_Teams_ColApplications": "Applications",
 	"RES_Teams_SearchLabel": "Nom de l'équipe",
 	"RES_Teams_MoreActions": "Plus d'actions",
@@ -107,6 +108,8 @@
 	"RES_TeamForm_TitleEdit": "Modifier l'équipe",
 	"RES_TeamForm_Name": "Nom de l'équipe",
 	"RES_TeamForm_NamePlaceholder": "Ex. : TOCT",
+	"RES_TeamForm_Owner": "Nom du responsable",
+	"RES_TeamForm_OwnerPlaceholder": "Ex. : Marie Dupont (facultatif)",
 	"RES_TeamForm_ApplicationsHeading": "Applications et types de test",
 	"RES_TeamForm_ApplicationsHint": "Produits ou microservices que l'équipe maintient et types de test couverts par chacun.",
 	"RES_TeamForm_ApplicationName": "Nom de l'application",

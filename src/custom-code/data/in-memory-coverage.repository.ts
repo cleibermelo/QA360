@@ -22,7 +22,12 @@ export class InMemoryCoverageRepository extends CoverageRepository {
 			name: a.name.trim(),
 			testTypeKeys: a.testTypeKeys
 		}));
-		const team: Team = { id: teamId, name: input.name.trim(), applications };
+		const team: Team = {
+			id: teamId,
+			name: input.name.trim(),
+			ownerName: (input.ownerName ?? '').trim(),
+			applications
+		};
 		const removedIds = (existing?.applications ?? [])
 			.map((a) => a.id)
 			.filter((id) => !applications.some((a) => a.id === id));

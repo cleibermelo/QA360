@@ -16,6 +16,8 @@ export interface TeamApplication {
 export interface Team {
 	id: string;
 	name: string;
+	/** Free-text name of the person responsible for the team; empty when not informed. */
+	ownerName: string;
 	applications: TeamApplication[];
 }
 
@@ -55,6 +57,7 @@ export interface CoverageInput {
 export interface TeamInput {
 	teamId?: string;
 	name: string;
+	ownerName?: string;
 	/** Applications with an `id` are existing ones that keep their history; the others are new. */
 	applications: { id?: string; name: string; testTypeKeys: string[] }[];
 }

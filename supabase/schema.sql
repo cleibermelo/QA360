@@ -19,6 +19,8 @@ create table if not exists public.teams (
   name       text not null check (char_length(btrim(name)) between 1 and 60),
   created_at timestamptz not null default now()
 );
+-- Nome do proprietario da equipe (texto livre, opcional). "add column if not exists" atualiza bancos ja criados.
+alter table public.teams add column if not exists owner_name text not null default '' check (char_length(owner_name) <= 60);
 -- Nome de equipe unico, sem diferenciar maiusculas/espacos nas pontas.
 create unique index if not exists teams_name_unique on public.teams (lower(btrim(name)));
 

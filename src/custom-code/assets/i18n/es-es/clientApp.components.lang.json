@@ -95,6 +95,7 @@
 	"RES_Records_ConfirmBatchText": "Estos registros ya existen en {period} y se modificarán: {list}. Los valores anteriores quedarán en el historial.",
 
 	"RES_Teams_Create": "Crear equipo",
+	"RES_Teams_ColOwner": "Propietario",
 	"RES_Teams_ColApplications": "Aplicaciones",
 	"RES_Teams_SearchLabel": "Nombre del equipo",
 	"RES_Teams_MoreActions": "Más acciones",
@@ -107,6 +108,8 @@
 	"RES_TeamForm_TitleEdit": "Editar equipo",
 	"RES_TeamForm_Name": "Nombre del equipo",
 	"RES_TeamForm_NamePlaceholder": "Ej.: TOCT",
+	"RES_TeamForm_Owner": "Nombre del propietario",
+	"RES_TeamForm_OwnerPlaceholder": "Ej.: María García (opcional)",
 	"RES_TeamForm_ApplicationsHeading": "Aplicaciones y tipos de prueba",
 	"RES_TeamForm_ApplicationsHint": "Productos o microservicios que mantiene el equipo y los tipos de prueba que cubre cada uno.",
 	"RES_TeamForm_ApplicationName": "Nombre de la aplicación",

@@ -11,6 +11,7 @@ import { openTeamModal } from './team-form.component';
 interface TeamRow {
 	id: string;
 	name: string;
+	ownerName: string;
 	/** Application names joined for display. */
 	applications: string;
 	/** Test types enabled on any of the team's applications, joined for display. */
@@ -89,6 +90,7 @@ export class TeamsDataSource extends MinSearchDataSource {
 					sortable: true,
 					cellClick: 'editTeam'
 				},
+				{ title: t('Teams_ColOwner'), field: 'ownerName', type: ColumnTypeEnum.Text, sortable: true },
 				{ title: t('Teams_ColApplications'), field: 'applications', type: ColumnTypeEnum.Text },
 				{ title: t('Common_TestType'), field: 'testTypes', type: ColumnTypeEnum.Text }
 			],
@@ -116,6 +118,7 @@ export class TeamsDataSource extends MinSearchDataSource {
 		const rows: TeamRow[] = this.store.teams().map((t) => ({
 			id: t.id,
 			name: t.name,
+			ownerName: t.ownerName || '—',
 			applications: t.applications.map((a) => a.name).join(', ') || '—',
 			testTypes:
 				this.store

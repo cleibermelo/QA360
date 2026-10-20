@@ -108,6 +108,11 @@ export const openTeamModal = (modal: ModalService, translator: Translator, teamI
 			<po-input [(value)]="name" [options]="nameOptions" [ariaLabel]="'TeamForm_Name' | translate" />
 		</div>
 
+		<div class="field">
+			<span class="label">{{ 'TeamForm_Owner' | translate }}</span>
+			<po-input [(value)]="ownerName" [options]="ownerOptions" [ariaLabel]="'TeamForm_Owner' | translate" />
+		</div>
+
 		<h4>{{ 'TeamForm_ApplicationsHeading' | translate }}</h4>
 		<p class="hint">{{ 'TeamForm_ApplicationsHint' | translate }}</p>
 		@for (row of rows(); track row.key) {
@@ -147,6 +152,7 @@ export class TeamFormComponent implements OnInit {
 	private readonly translator = inject(Translator);
 
 	protected readonly name = signal('');
+	protected readonly ownerName = signal('');
 	protected readonly rows = signal<ApplicationRow[]>([]);
 	/** Test types already enabled when the form opened, so inactive ones are not silently dropped on edit. */
 	private readonly initialKeys = signal<string[]>([]);
@@ -164,6 +170,10 @@ export class TeamFormComponent implements OnInit {
 
 	protected readonly nameOptions = new InputOptions({
 		placeholder: this.translator.t('TeamForm_NamePlaceholder'),
+		maxLength: 60
+	});
+	protected readonly ownerOptions = new InputOptions({
+		placeholder: this.translator.t('TeamForm_OwnerPlaceholder'),
 		maxLength: 60
 	});
 	protected readonly applicationOptions = new InputOptions({
@@ -185,6 +195,7 @@ export class TeamFormComponent implements OnInit {
 		const team = this.teamId() ? this.store.getTeam(this.teamId()) : undefined;
 		if (team) {
 			this.name.set(team.name);
+			this.ownerName.set(team.ownerName);
 			this.rows.set(
 				team.applications.map((a) => ({
 					key: this.nextKey++,
@@ -246,6 +257,7 @@ export class TeamFormComponent implements OnInit {
 		const result = await this.store.saveTeam({
 			teamId: this.teamId(),
 			name: this.name(),
+			ownerName: this.ownerName(),
 			applications: this.rows().map((r) => ({ id: r.id, name: r.name, testTypeKeys: r.testTypeKeys }))
 		});
 		if (result.error) {
