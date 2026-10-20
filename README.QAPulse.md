@@ -17,6 +17,7 @@ Acompanhamento mensal da cobertura de testes automatizados por equipe e aplicaç
 | Dashboard | `/dashboard` | Gráfico de linha e tabela de conferência por aplicação e tipo de teste                            |
 | Records   | `/records`   | Tabela de registros (datagrid, igual a Teams) com "Create record", editar, histórico e excluir    |
 | Teams     | `/teams`     | Lista de equipes (tabela do Polygon); criar e editar em modal (nome, aplicações e tipos de teste) |
+| SonarCloud | `/sonarcloud` | Cobertura de testes unitários vinda do SonarCloud: cartão do mês escolhido e gráfico do histórico por projeto |
 
 O código, as rotas e os menus estão em inglês. Os textos das telas vêm dos arquivos de tradução (ver "Idiomas").
 
@@ -56,6 +57,29 @@ O Polygon lê `assets/environment.json` em tempo de execução (origem: `src/cus
 - Use somente a chave pública. A chave `service_role` nunca deve aparecer no app nem no repositório.
 - Arquivos `.env`, `.env.local` e `.env.*.local` estão no `.gitignore`, mas o app não os lê.
 - Ao mudar textos ou menus, aumente `version` no `package.json` (e no `package-lock.json`) para invalidar o cache de traduções dos navegadores: o gerador do Polygon copia esse valor para o `version` dos arquivos de ambiente, então alterar só o `env.pd.json` não adianta.
+
+## Cobertura do SonarCloud
+
+Um job diário lê a cobertura dos projetos da organização no SonarCloud e grava, em `sonar_coverage_monthly`, o **último valor medido de cada mês** por projeto (`project_key` + `month`, sempre o dia 1; meses sem medição não são preenchidos). A tela **SonarCloud** só lê essa tabela.
+
+- Código: `scripts/sonar-sync/` (`sync.mjs`, `sonar-client.mjs`, `supabase-writer.mjs`) e a regra de agrupamento em `src/custom-code/domain/sonar-coverage.ts` (com testes). O job não instala dependências: usa o `fetch` do Node 22.
+- Tabela, RLS e a view `sonar_projects` estão em `supabase/schema.sql` (rode o arquivo no SQL Editor). Usuários autenticados só leem; a gravação é feita pela service role, que ignora o RLS.
+- Agendamento: `.github/workflows/sonar-sync.yml` (todo dia às 06:00 UTC e manual em Actions > Sync SonarCloud coverage > Run workflow). O agendamento e o botão só existem depois que o workflow estiver na `main`.
+- Secrets do repositório (Settings > Secrets and variables > Actions): `SONAR_TOKEN`, `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`. A organização (`cegidgroup`) e o filtro (`iberia`) estão no próprio workflow.
+- Erros: token inválido (401) interrompe a execução; projeto sem permissão ou não encontrado (403/404) vira aviso e o job continua; os demais erros de um projeto são contados e o job termina com falha.
+
+### Executar manualmente
+
+Copie `.env.example` para `.env` (não versionado), preencha e rode:
+
+```powershell
+Get-Content .env | ForEach-Object { if ($_ -match '^\s*([^#=]+)=(.*)$') { Set-Item "Env:$($Matches[1].Trim())" $Matches[2].Trim() } }
+node --experimental-strip-types scripts/sonar-sync/sync.mjs
+```
+
+- Sem `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` (ou com `--dry-run`) nada é gravado: o script só lista o que gravaria.
+- `--only=chave1,chave2` limita a execução a esses projetos.
+- Referências para conferir: `iberia_lithium-product-tech.srs.server` termina em 33.8% (2026-02-25), `iberia_lithium-product-core.ids.server` em 41.5% (2026-02-27) e `iberia_lithium-product-tech.cbms.server` não tem análise e não gera linhas.
 
 ## Estrutura (`src/custom-code`)
 

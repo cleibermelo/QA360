@@ -2,6 +2,7 @@
 	"RES_Menu_Dashboard": "Dashboard",
 	"RES_Menu_Records": "Records",
 	"RES_Menu_Teams": "Teams",
+	"RES_Menu_SonarCloud": "SonarCloud",
 
 	"RES_Login_Title": "Sign in",
 	"RES_Login_Welcome": "Welcome to QAPulse",
@@ -24,6 +25,7 @@
 	"RES_Title_Dashboard": "Dashboard",
 	"RES_Title_Records": "Records",
 	"RES_Title_Teams": "Teams",
+	"RES_Title_SonarCloud": "SonarCloud",
 
 	"RES_Common_Team": "Team",
 	"RES_Common_Application": "Application",
@@ -51,6 +53,18 @@
 	"RES_Dashboard_Empty": "There are no records for this selection yet. Enter the percentages in the Records menu to see the evolution here.",
 	"RES_Dashboard_Values": "Values shown",
 	"RES_Dashboard_MonthYear": "Month/Year",
+
+	"RES_Sonar_Project": "Project",
+	"RES_Sonar_ProjectPlaceholder": "Select the project",
+	"RES_Sonar_Month": "Month",
+	"RES_Sonar_Loading": "Loading...",
+	"RES_Sonar_NoData": "No SonarCloud coverage has been stored yet. It appears here after the daily sync runs.",
+	"RES_Sonar_SelectProject": "Select a project to see its coverage.",
+	"RES_Sonar_SelectMonth": "Select the month.",
+	"RES_Sonar_NoMeasurement": "No measurement in this month",
+	"RES_Sonar_Coverage": "Unit test coverage",
+	"RES_Sonar_MeasuredOn": "Measured on",
+	"RES_Sonar_History": "Coverage history",
 
 	"RES_Records_Period": "Period",
 	"RES_Records_Month": "Month",

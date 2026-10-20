@@ -35,6 +35,11 @@ export const customRoutes: Routes = [
 				path: 'teams',
 				loadComponent: () => import('./pages/teams/teams-list.component').then((c) => c.TeamsListComponent)
 			},
+			{
+				path: 'sonarcloud',
+				loadComponent: () =>
+					import('./pages/sonarcloud/sonarcloud.component').then((c) => c.SonarcloudComponent)
+			},
 			{ path: '', pathMatch: 'full', redirectTo: 'dashboard' },
 			{ path: '**', redirectTo: 'dashboard' }
 		]

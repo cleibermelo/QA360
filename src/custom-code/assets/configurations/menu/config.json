@@ -18,6 +18,12 @@
 			"uri": "/teams",
 			"caption": "clientApp.components.RES_Menu_Teams",
 			"icon": "icon-groups"
+		},
+		{
+			"id": "sonarcloud",
+			"uri": "/sonarcloud",
+			"caption": "clientApp.components.RES_Menu_SonarCloud",
+			"icon": "icon-cloud"
 		}
 	]
 }
