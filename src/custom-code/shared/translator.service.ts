@@ -31,6 +31,11 @@ export class Translator {
 		return this.i18n.currentLocale$.value ?? 'en-US';
 	}
 
+	/** Short month name in the user's language without the final dot ("jan", "out", "Oct"). */
+	monthShort(month: number): string {
+		return new Date(2000, month - 1, 1).toLocaleString(this.locale, { month: 'short' }).replace(/\.$/, '');
+	}
+
 	/** Full month name in the user's language, capitalized ("January", "Janeiro"). */
 	monthName(month: number): string {
 		const name = new Date(2000, month - 1, 1).toLocaleString(this.locale, { month: 'long' });

@@ -133,6 +133,34 @@ end;
 $$;
 
 -- ---------------------------------------------------------------------------
+-- Cobertura do SonarCloud: ultimo valor medido de cada mes, por projeto.
+-- Gravada somente pelo job scripts/sonar-sync (service role, que ignora o RLS);
+-- o app so le. Por isso nao ha policy de escrita.
+-- ---------------------------------------------------------------------------
+create table if not exists public.sonar_coverage_monthly (
+  project_key  text not null,
+  project_name text,
+  month        date not null check (month = date_trunc('month', month)::date),
+  coverage     numeric(5, 2),
+  measured_on  date not null,
+  updated_at   timestamptz not null default now(),
+  primary key (project_key, month)
+);
+
+alter table public.sonar_coverage_monthly enable row level security;
+
+-- Leitura so para usuarios autenticados, como nas demais tabelas (o site e publico, os projetos nao).
+drop policy if exists "authenticated read" on public.sonar_coverage_monthly;
+create policy "authenticated read" on public.sonar_coverage_monthly
+  for select to authenticated using (true);
+
+-- Um registro por projeto (nome mais recente) para o seletor do app; a consulta direta passaria do limite de linhas da API.
+create or replace view public.sonar_projects with (security_invoker = true) as
+  select distinct on (project_key) project_key, project_name
+  from public.sonar_coverage_monthly
+  order by project_key, month desc;
+
+-- ---------------------------------------------------------------------------
 -- Seguranca: RLS ligado em todas as tabelas.
 -- Sem nenhuma policy ninguem acessa; aqui so usuarios autenticados (Supabase Auth) podem ler e escrever.
 -- Enquanto o app roda sem login, execute tambem supabase/dev-anon-policies.sql (ver docs/supabase.md).

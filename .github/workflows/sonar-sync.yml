@@ -1,0 +1,32 @@
+name: Sync SonarCloud coverage
+
+on:
+    schedule:
+        - cron: '0 6 * * *'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: sonar-sync
+
+jobs:
+    sync:
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+
+            # No npm install: the job only uses Node's built-in fetch.
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - run: node --experimental-strip-types --no-warnings scripts/sonar-sync/sync.mjs
+              env:
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                  SONAR_ORG: cegidgroup
+                  SONAR_PROJECT_FILTER: iberia
+                  SONAR_EXTRA_BRANCHES: main
+                  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

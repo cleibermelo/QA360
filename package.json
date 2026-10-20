@@ -1,6 +1,6 @@
 {
   "name": "QAPulse",
-  "version": "1.9.1",
+  "version": "1.10.2",
   "productName": "QAPulse",
   "scripts": {
     "ng": "ng",
