@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
 import {
 	ButtonColorEnum,
 	ButtonComponent,
@@ -180,6 +180,7 @@ export class SonarcloudComponent implements OnInit {
 	/** True while the history of newly selected projects is being read. */
 	protected readonly busy = signal(false);
 	protected readonly loadError = signal(false);
+	private readonly projectSelect = viewChild(MultiSelectComponent);
 	/** The multi-select does not clear its chips by itself, so a new key renders the filters again. */
 	protected readonly filtersKey = signal(0);
 	protected readonly clearButton = new ButtonOptions({
@@ -277,6 +278,7 @@ export class SonarcloudComponent implements OnInit {
 	protected async selectProjects(keys: string[] | null): Promise<void> {
 		const selected = keys ?? [];
 		this.projectKeys.set(selected);
+		this.clearSearchText();
 		const missing = selected.filter((key) => !(key in this.histories()));
 		if (missing.length === 0) {
 			return;
@@ -305,6 +307,11 @@ export class SonarcloudComponent implements OnInit {
 
 	private validMonth(value: string | null): string {
 		return value && /^\d{4}-(0[1-9]|1[0-2])$/.test(value) ? value : '';
+	}
+
+	/** The multi-select keeps what the user typed after a pick; clears it (and the filtered list) once its own handling is done. */
+	private clearSearchText(): void {
+		setTimeout(() => this.projectSelect()?.selectBoxComponent().selectBoxService.setAndEmitInputValue(''));
 	}
 
 	private nameOf(key: string): string {
