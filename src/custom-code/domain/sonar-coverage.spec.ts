@@ -39,6 +39,22 @@ describe('lastValuePerMonth', () => {
 		).toEqual([{ month: '2026-02-01', coverage: 41.5, measuredOn: '2026-02-20' }]);
 	});
 
+	it('merges the histories of two branches, the latest measurement of each month winning', () => {
+		const master = [
+			{ date: '2026-03-17T10:00:00+0000', value: '57.3' },
+			{ date: '2026-04-17T15:16:00+0000', value: '56.5' }
+		];
+		const main = [
+			{ date: '2026-04-20T09:00:00+0000', value: '60' },
+			{ date: '2026-10-20T16:31:00+0000', value: '70.2' }
+		];
+		expect(lastValuePerMonth([...master, ...main])).toEqual([
+			{ month: '2026-03-01', coverage: 57.3, measuredOn: '2026-03-17' },
+			{ month: '2026-04-01', coverage: 60, measuredOn: '2026-04-20' },
+			{ month: '2026-10-01', coverage: 70.2, measuredOn: '2026-10-20' }
+		]);
+	});
+
 	it('turns a year-month into the first day of the month', () => {
 		expect(monthStart('2026-02')).toBe('2026-02-01');
 	});

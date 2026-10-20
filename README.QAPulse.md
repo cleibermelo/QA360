@@ -66,6 +66,7 @@ Um job diário lê a cobertura dos projetos da organização no SonarCloud e gra
 - Tabela, RLS e a view `sonar_projects` estão em `supabase/schema.sql` (rode o arquivo no SQL Editor). Usuários autenticados só leem; a gravação é feita pela service role, que ignora o RLS.
 - Agendamento: `.github/workflows/sonar-sync.yml` (todo dia às 06:00 UTC e manual em Actions > Sync SonarCloud coverage > Run workflow). O agendamento e o botão só existem depois que o workflow estiver na `main`.
 - Secrets do repositório (Settings > Secrets and variables > Actions): `SONAR_TOKEN`, `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`. A organização (`cegidgroup`) e o filtro (`iberia`) estão no próprio workflow.
+- Branches: vários projetos ainda têm `master` como branch principal no SonarCloud, enquanto os pipelines já analisam `main`, que o SonarCloud trata como branch secundária (o dashboard do SonarCloud e a API padrão leem só a principal). Por isso o job lê também as branches de `SONAR_EXTRA_BRANCHES` (padrão `main`) e junta os históricos: em cada mês vale a medição de data mais recente, de qualquer das branches. Para ler só a branch principal, deixe a variável vazia.
 - Erros: token inválido (401) interrompe a execução; projeto sem permissão ou não encontrado (403/404) vira aviso e o job continua; os demais erros de um projeto são contados e o job termina com falha.
 
 ### Executar manualmente

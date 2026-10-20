@@ -1,8 +1,13 @@
 // Collects the unit test coverage of the SonarCloud projects and stores the last value of each month in Supabase.
 //
 // Run:  node --experimental-strip-types scripts/sonar-sync/sync.mjs [--dry-run] [--only=key1,key2]
-// Env:  SONAR_TOKEN, SONAR_ORG, SONAR_PROJECT_FILTER (optional), SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+// Env:  SONAR_TOKEN, SONAR_ORG, SONAR_PROJECT_FILTER (optional), SONAR_EXTRA_BRANCHES (optional, default "main"),
+//        SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
 // Without the two SUPABASE_* variables (or with --dry-run) nothing is written: the rows are only counted and listed.
+//
+// Many projects still have "master" as the SonarCloud main branch while the pipelines now analyse "main", which
+// SonarCloud treats as a secondary branch. The history of the extra branches is merged with the main branch's:
+// in each month the measurement with the latest date wins, whichever branch it came from.
 
 import { lastValuePerMonth } from '../../src/custom-code/domain/sonar-coverage.ts';
 import { createSonarClient, SonarError } from './sonar-client.mjs';
@@ -24,6 +29,10 @@ const only = args
 const token = process.env['SONAR_TOKEN'];
 const organization = process.env['SONAR_ORG'];
 const filter = (process.env['SONAR_PROJECT_FILTER'] ?? '').trim();
+const extraBranches = (process.env['SONAR_EXTRA_BRANCHES'] ?? 'main')
+	.split(',')
+	.map((b) => b.trim())
+	.filter(Boolean);
 const supabaseUrl = process.env['SUPABASE_URL'];
 const serviceRoleKey = process.env['SUPABASE_SERVICE_ROLE_KEY'];
 
@@ -43,6 +52,9 @@ const writer = dryRun ? undefined : createSupabaseWriter({ url: supabaseUrl, ser
 
 const stats = { processed: 0, skipped: 0, warnings: 0, errors: 0, rows: 0 };
 
+// 403/404 are about this project or branch only (private, no "Browse" permission, or the branch does not exist).
+const isAccessError = (error) => error instanceof SonarError && (error.status === 403 || error.status === 404);
+
 try {
 	let projects = await sonar.listProjects({ organization, filter });
 	if (only?.length) {
@@ -55,7 +67,35 @@ try {
 
 	for (const project of projects) {
 		try {
-			const monthly = lastValuePerMonth(await sonar.getCoverageHistory(project.key));
+			const history = [];
+			let denied;
+			try {
+				history.push(...(await sonar.getCoverageHistory(project.key)));
+			} catch (error) {
+				if (!isAccessError(error)) {
+					throw error;
+				}
+				denied = error;
+			}
+			const usedBranches = [];
+			for (const branch of extraBranches) {
+				try {
+					const points = await sonar.getCoverageHistory(project.key, branch);
+					history.push(...points);
+					if (points.length > 0) {
+						usedBranches.push(branch);
+					}
+				} catch (error) {
+					// A project without that branch is normal.
+					if (!isAccessError(error)) {
+						throw error;
+					}
+				}
+			}
+			if (history.length === 0 && denied) {
+				throw denied;
+			}
+			const monthly = lastValuePerMonth(history);
 			if (monthly.length === 0) {
 				stats.skipped++;
 				console.log(`PULADO  ${project.key}: sem análise de cobertura.`);
@@ -75,7 +115,8 @@ try {
 			stats.rows += rows.length;
 			const last = monthly[monthly.length - 1];
 			console.log(
-				`OK      ${project.key}: ${rows.length} mês(es); último ${last.month.slice(0, 7)} = ${last.coverage}% (${last.measuredOn}).`
+				`OK      ${project.key}: ${rows.length} mês(es); último ${last.month.slice(0, 7)} = ${last.coverage}% (${last.measuredOn})` +
+					(usedBranches.length ? `; inclui branch ${usedBranches.join(', ')}.` : '.')
 			);
 		} catch (error) {
 			// A rejected token affects every project, so it stops the run; other errors only count against this project.
@@ -83,7 +124,7 @@ try {
 				throw error;
 			}
 			// Projects can be listed yet refuse to share their history (private, no "Browse" permission): not a failure of the job.
-			if (error instanceof SonarError && (error.status === 403 || error.status === 404)) {
+			if (isAccessError(error)) {
 				stats.warnings++;
 				console.warn(`AVISO   ${project.key}: ${error.message}`);
 				continue;

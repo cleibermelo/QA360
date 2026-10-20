@@ -81,14 +81,21 @@ export const createSonarClient = ({ token, fetchImpl = fetch, retryDelayMs = 100
 			}
 		},
 
-		/** Coverage history of one project: `[{ date, value }]`, empty when it was never analysed. */
-		async getCoverageHistory(projectKey) {
+		/**
+		 * Coverage history of one project: `[{ date, value }]`, empty when it was never analysed.
+		 * Without `branch` it is the project's main branch; with it, that branch of the project.
+		 */
+		async getCoverageHistory(projectKey, branch) {
 			const history = [];
 			for (let page = 1; ; page++) {
+				const params = { component: projectKey, metrics: 'coverage', ps: 1000, p: page };
+				if (branch) {
+					params.branch = branch;
+				}
 				const data = await get(
 					'/measures/search_history',
-					{ component: projectKey, metrics: 'coverage', ps: 1000, p: page },
-					`ler o histórico de ${projectKey}`
+					params,
+					`ler o histórico de ${projectKey}${branch ? ` (branch ${branch})` : ''}`
 				);
 				const points = data.measures?.find((m) => m.metric === 'coverage')?.history ?? [];
 				history.push(...points);

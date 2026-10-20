@@ -27,5 +27,6 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                   SONAR_ORG: cegidgroup
                   SONAR_PROJECT_FILTER: iberia
+                  SONAR_EXTRA_BRANCHES: main
                   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
                   SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
