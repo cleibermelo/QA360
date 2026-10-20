@@ -11,7 +11,7 @@ import { OutletEnum, ViewTitleService } from '@polygon/core';
 import { CoverageLineChartComponent } from '../../components/coverage-line-chart/coverage-line-chart.component';
 import { SonarCoverageService, SonarProject } from '../../data/sonar-coverage.service';
 import { ChartData, ChartSeries } from '../../domain/dashboard';
-import { MonthlyCoverage, monthRange, monthStart } from '../../domain/sonar-coverage';
+import { MonthlyCoverage, monthRange, monthStart, shortProjectNames } from '../../domain/sonar-coverage';
 import { TranslatePipe } from '../../shared/translate.pipe';
 import { Translator } from '../../shared/translator.service';
 import { SonarcloudFiltersState } from './sonarcloud-filters.state';
@@ -229,9 +229,11 @@ export class SonarcloudComponent implements OnInit {
 			return EMPTY_CHART;
 		}
 		const months = monthRange(this.from(), this.to());
-		const series: ChartSeries[] = this.projectKeys().map((key) => {
+		// The legend only needs the short name; the table below has the full one.
+		const names = shortProjectNames(this.projectKeys().map((key) => this.nameOf(key)));
+		const series: ChartSeries[] = this.projectKeys().map((key, i) => {
 			const byMonth = new Map((this.histories()[key] ?? []).map((h) => [h.month.slice(0, 7), h.coverage]));
-			return { name: this.nameOf(key), values: months.map((m) => byMonth.get(m) ?? null) };
+			return { name: names[i], values: months.map((m) => byMonth.get(m) ?? null) };
 		});
 		if (!series.some((s) => s.values.some((v) => v !== null))) {
 			return EMPTY_CHART;

@@ -57,3 +57,19 @@ export const monthRange = (from: string, to: string): string[] => {
 	}
 	return months;
 };
+
+/**
+ * Short label for a project: what follows the first dot ("iberia_lithium-product-tech.usg.server" -> "usg.server"),
+ * or what follows the first underscore when there is no dot.
+ */
+export const shortProjectName = (name: string): string => {
+	const dot = name.indexOf('.');
+	const start = dot >= 0 ? dot : name.indexOf('_');
+	return name.slice(start + 1) || name;
+};
+
+/** Short names, except where two projects would end up with the same one: those keep their full name. */
+export const shortProjectNames = (names: string[]): string[] => {
+	const shorts = names.map(shortProjectName);
+	return shorts.map((short, i) => (shorts.indexOf(short) === shorts.lastIndexOf(short) ? short : names[i]));
+};

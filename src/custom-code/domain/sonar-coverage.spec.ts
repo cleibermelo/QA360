@@ -1,4 +1,4 @@
-import { lastValuePerMonth, monthRange, monthStart } from './sonar-coverage';
+import { lastValuePerMonth, monthRange, monthStart, shortProjectName, shortProjectNames } from './sonar-coverage';
 
 describe('lastValuePerMonth', () => {
 	it('keeps only the latest measurement of each month', () => {
@@ -53,5 +53,24 @@ describe('monthRange', () => {
 	it('returns one month when the ends are equal and nothing when the interval is inverted', () => {
 		expect(monthRange('2026-03', '2026-03')).toEqual(['2026-03']);
 		expect(monthRange('2026-04', '2026-03')).toEqual([]);
+	});
+});
+
+describe('shortProjectName', () => {
+	it('keeps what follows the first dot, or the first underscore when there is no dot', () => {
+		expect(shortProjectName('iberia_lithium-product-tech.usg.server')).toBe('usg.server');
+		expect(shortProjectName('iberia_ekon-product-ac')).toBe('ekon-product-ac');
+		expect(shortProjectName('plain')).toBe('plain');
+		expect(shortProjectName('odd.')).toBe('odd.');
+	});
+
+	it('keeps the full name of projects whose short names would be equal', () => {
+		expect(
+			shortProjectNames([
+				'iberia_lithium-product-tech.srs.server',
+				'iberia_lithium-product-core.srs.server',
+				'iberia_lithium-product-tech.usg.server'
+			])
+		).toEqual(['iberia_lithium-product-tech.srs.server', 'iberia_lithium-product-core.srs.server', 'usg.server']);
 	});
 });
