@@ -116,17 +116,11 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 			</section>
 		} @else {
 			<section class="page-section">
-				<div class="filters">
-					<div class="field">
-						<span class="label">{{ 'Sonar_Month' | translate }}</span>
-						<po-month-input
-							[value]="month()"
-							(valueChange)="setMonth($event)"
-							[ariaLabel]="'Sonar_Month' | translate" />
-					</div>
-				</div>
-				@if (!month()) {
-					<div class="empty">{{ 'Sonar_SelectMonth' | translate }}</div>
+				<h3>{{ 'Sonar_Latest' | translate }}</h3>
+				@if (!from() || !to()) {
+					<div class="empty">{{ 'Sonar_SelectPeriod' | translate }}</div>
+				} @else if (rangeIsInverted()) {
+					<div class="empty">{{ 'Dashboard_InvalidRange' | translate }}</div>
 				} @else {
 					<table class="data-table">
 						<thead>
@@ -145,7 +139,7 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 										<td>{{ row.measuredOn }}</td>
 									} @else {
 										<td class="number muted">—</td>
-										<td class="muted">{{ 'Sonar_NoMeasurement' | translate }}</td>
+										<td class="muted">{{ 'Sonar_NoDataInPeriod' | translate }}</td>
 									}
 								</tr>
 							}
@@ -199,7 +193,6 @@ export class SonarcloudComponent implements OnInit {
 	// The filters follow the data of the selected projects until the user types a value (an empty string means cleared).
 	private readonly pickedFrom = this.filters.pickedFrom;
 	private readonly pickedTo = this.filters.pickedTo;
-	private readonly pickedMonth = this.filters.pickedMonth;
 
 	/** First and last month (`YYYY-MM`) stored for the selected projects. */
 	private readonly bounds = computed(() => {
@@ -212,15 +205,15 @@ export class SonarcloudComponent implements OnInit {
 	/** Period of the chart, as `YYYY-MM`. */
 	protected readonly from = computed(() => this.pickedFrom() ?? this.bounds().first);
 	protected readonly to = computed(() => this.pickedTo() ?? this.bounds().last);
-	/** Month shown in the table; by default the latest one with data. */
-	protected readonly month = computed(() => this.pickedMonth() ?? this.bounds().last);
 	protected readonly rangeIsInverted = computed(() => this.from() > this.to());
 
-	/** One row per selected project for exactly the chosen month; a month without a value is never replaced by another. */
+	/** One row per selected project with its latest stored month inside the period; none means no data in it. */
 	protected readonly rows = computed<TableRow[]>(() => {
-		const month = monthStart(this.month());
+		const first = monthStart(this.from());
+		const last = monthStart(this.to());
 		return this.projectKeys().map((key) => {
-			const found = this.histories()[key]?.find((h) => h.month === month);
+			// The history is sorted by month, so the last match is the latest.
+			const found = (this.histories()[key] ?? []).filter((h) => h.month >= first && h.month <= last).at(-1);
 			return {
 				key,
 				name: this.nameOf(key),
@@ -306,10 +299,6 @@ export class SonarcloudComponent implements OnInit {
 
 	protected setTo(value: string | null): void {
 		this.pickedTo.set(this.validMonth(value));
-	}
-
-	protected setMonth(value: string | null): void {
-		this.pickedMonth.set(this.validMonth(value));
 	}
 
 	private validMonth(value: string | null): string {

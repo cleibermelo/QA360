@@ -6,7 +6,6 @@ describe('SonarcloudFiltersState', () => {
 		const state = TestBed.inject(SonarcloudFiltersState);
 		state.projectKeys.set(['a', 'b']);
 		state.pickedFrom.set('2026-01');
-		state.pickedMonth.set('');
 
 		expect(TestBed.inject(SonarcloudFiltersState).projectKeys()).toEqual(['a', 'b']);
 
@@ -14,6 +13,5 @@ describe('SonarcloudFiltersState', () => {
 		expect(state.projectKeys()).toEqual([]);
 		expect(state.pickedFrom()).toBeNull();
 		expect(state.pickedTo()).toBeNull();
-		expect(state.pickedMonth()).toBeNull();
 	});
 });

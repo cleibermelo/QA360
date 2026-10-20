@@ -10,13 +10,11 @@ export class SonarcloudFiltersState {
 	// null follows the data of the selected projects; a string (even an empty one) is what the user typed.
 	readonly pickedFrom = signal<string | null>(null);
 	readonly pickedTo = signal<string | null>(null);
-	readonly pickedMonth = signal<string | null>(null);
 
-	/** Back to the empty state: no projects, and the period and month follow the data again. */
+	/** Back to the empty state: no projects, and the period follows the data again. */
 	reset(): void {
 		this.projectKeys.set([]);
 		this.pickedFrom.set(null);
 		this.pickedTo.set(null);
-		this.pickedMonth.set(null);
 	}
 }
