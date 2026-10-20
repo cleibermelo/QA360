@@ -47,7 +47,9 @@ export class SupabaseCoverageRepository extends CoverageRepository {
 	async load(): Promise<CoverageSnapshot> {
 		const [types, teams, entries] = await Promise.all([
 			this.client.from('test_types').select('key, active'),
-			this.client.from('teams').select('id, name, owner_name, applications(id, name, application_test_types(test_type_key))'),
+			this.client
+				.from('teams')
+				.select('id, name, owner_name, applications(id, name, application_test_types(test_type_key))'),
 			this.client
 				.from('coverage_entries')
 				.select(
@@ -110,9 +112,7 @@ export class SupabaseCoverageRepository extends CoverageRepository {
 		const ownerName = (input.ownerName ?? '').trim();
 		let teamId = existing?.id;
 		if (teamId) {
-			this.check(
-				await this.client.from('teams').update({ name, owner_name: ownerName }).eq('id', teamId)
-			);
+			this.check(await this.client.from('teams').update({ name, owner_name: ownerName }).eq('id', teamId));
 		} else {
 			const { data, error } = await this.client
 				.from('teams')

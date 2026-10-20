@@ -1,55 +1,61 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+    push:
+        branches: [main]
+    workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+    group: pages
+    cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
 
-      # The project scripts also generate src/generated-code, so scripts are skipped and the generator runs explicitly.
-      - run: npm ci --ignore-scripts
+            # The project scripts also generate src/generated-code, so scripts are skipped and the generator runs explicitly.
+            - run: npm ci --ignore-scripts
 
-      # On Linux the Polygon generator reads this license file even though the package does not ship it, and fails without it.
-      - run: touch node_modules/@polygon/schematics/assets/latest/kendo-ui-license.txt
-      - run: npx ng g @polygon/schematics:generated-code
+            # On Linux the Polygon generator reads this license file even though the package does not ship it, and fails without it.
+            - run: touch node_modules/@polygon/schematics/assets/latest/kendo-ui-license.txt
+            - run: npx ng g @polygon/schematics:generated-code
 
-      - run: npx ng build --configuration production --base-href /QAPulse/ --output-path dist/site
+            - run: npx ng build --configuration production --base-href /QAPulse/ --output-path dist/site
 
-      # The production build expects the deployment environment file to be provided at deploy time.
-      - run: cp src/custom-code/environments/deploys/env.pd.json dist/site/browser/assets/environment.json
+            # The production build expects the deployment environment file to be provided at deploy time.
+            # The version comes from package.json (the generator reads package-lock.json, which stays untouched to reuse the npm cache);
+            # a new version invalidates the cached translations in browsers.
+            - run: >-
+                  node -e "const fs=require('fs');
+                  const env=JSON.parse(fs.readFileSync('src/custom-code/environments/deploys/env.pd.json','utf8'));
+                  env.version=require('./package.json').version;
+                  fs.writeFileSync('dist/site/browser/assets/environment.json',JSON.stringify(env,null,2))"
 
-      # GitHub Pages answers unknown paths (like /QAPulse/records on reload) with 404.html, so it must be the app itself.
-      - run: cp dist/site/browser/index.html dist/site/browser/404.html
+            # GitHub Pages answers unknown paths (like /QAPulse/records on reload) with 404.html, so it must be the app itself.
+            - run: cp dist/site/browser/index.html dist/site/browser/404.html
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/site/browser
+            - uses: actions/upload-pages-artifact@v3
+              with:
+                  path: dist/site/browser
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-24.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+    deploy:
+        needs: build
+        runs-on: ubuntu-24.04
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - id: deployment
+              uses: actions/deploy-pages@v4
