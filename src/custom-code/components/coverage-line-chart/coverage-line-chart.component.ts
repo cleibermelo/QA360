@@ -43,6 +43,10 @@ export class CoverageLineChartComponent implements OnDestroy {
 	readonly labels = input.required<string[]>();
 	readonly series = input.required<ChartSeries[]>();
 	readonly unit = input('%');
+	/** Joins the points across months without a value; turn off to show those months as gaps. */
+	readonly spanGaps = input(true);
+	/** Optional longer text for each label, used as the tooltip title. */
+	readonly tooltipTitles = input<string[]>();
 
 	protected readonly translator = inject(Translator);
 
@@ -55,6 +59,8 @@ export class CoverageLineChartComponent implements OnDestroy {
 			const labels = this.labels();
 			const series = this.series();
 			const unit = this.unit();
+			const spanGaps = this.spanGaps();
+			const titles = this.tooltipTitles();
 			const style = getComputedStyle(this.canvas().nativeElement);
 			// Reads the theme token at draw time; falls back to a fixed blue if the token is missing.
 			const color = (i: number): string =>
@@ -65,8 +71,8 @@ export class CoverageLineChartComponent implements OnDestroy {
 				borderColor: color(i),
 				backgroundColor: color(i),
 				tension: 0.2,
-				// Months without an entry do not break the line.
-				spanGaps: true
+				// Months without an entry do not break the line, unless the caller wants the gaps shown.
+				spanGaps
 			}));
 
 			this.chart?.destroy();
@@ -84,7 +90,14 @@ export class CoverageLineChartComponent implements OnDestroy {
 							ticks: { callback: (v) => `${v}%` }
 						}
 					},
-					plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}%` } } }
+					plugins: {
+						tooltip: {
+							callbacks: {
+								title: (items) => titles?.[items[0].dataIndex] ?? items[0].label,
+								label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}%`
+							}
+						}
+					}
 				}
 			});
 		});

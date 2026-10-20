@@ -1,4 +1,4 @@
-import { lastValuePerMonth, monthStart } from './sonar-coverage';
+import { lastValuePerMonth, monthRange, monthStart } from './sonar-coverage';
 
 describe('lastValuePerMonth', () => {
 	it('keeps only the latest measurement of each month', () => {
@@ -41,5 +41,17 @@ describe('lastValuePerMonth', () => {
 
 	it('turns a year-month into the first day of the month', () => {
 		expect(monthStart('2026-02')).toBe('2026-02-01');
+	});
+});
+
+describe('monthRange', () => {
+	it('lists every month of the interval, crossing years', () => {
+		expect(monthRange('2025-11', '2026-02')).toEqual(['2025-11', '2025-12', '2026-01', '2026-02']);
+		expect(monthRange('2026-01', '2026-08')).toHaveSize(8);
+	});
+
+	it('returns one month when the ends are equal and nothing when the interval is inverted', () => {
+		expect(monthRange('2026-03', '2026-03')).toEqual(['2026-03']);
+		expect(monthRange('2026-04', '2026-03')).toEqual([]);
 	});
 });

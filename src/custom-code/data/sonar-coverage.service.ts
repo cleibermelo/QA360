@@ -36,20 +36,6 @@ export class SonarCoverageService {
 		return (data ?? []).map((p) => ({ key: p.project_key, name: p.project_name ?? p.project_key }));
 	}
 
-	/** The stored value of exactly this month (`YYYY-MM-01`), or null; other months are never used instead. */
-	async getMonth(projectKey: string, month: string): Promise<MonthlyCoverage | null> {
-		const { data, error } = await this.client
-			.from('sonar_coverage_monthly')
-			.select('month, coverage, measured_on')
-			.eq('project_key', projectKey)
-			.eq('month', month)
-			.maybeSingle();
-		if (error) {
-			throw new Error(error.message);
-		}
-		return data ? toMonthly(data as CoverageRow) : null;
-	}
-
 	/** All stored months of the project, oldest first. */
 	async getHistory(projectKey: string): Promise<MonthlyCoverage[]> {
 		const { data, error } = await this.client

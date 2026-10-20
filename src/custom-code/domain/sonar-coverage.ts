@@ -47,3 +47,13 @@ export const lastValuePerMonth = (history: SonarHistoryPoint[]): MonthlyCoverage
 		}))
 		.sort((a, b) => a.month.localeCompare(b.month));
 };
+
+/** Every month (`YYYY-MM`) from `from` to `to`, both included; empty when `from` is after `to`. */
+export const monthRange = (from: string, to: string): string[] => {
+	const index = (yearMonth: string): number => Number(yearMonth.slice(0, 4)) * 12 + Number(yearMonth.slice(5, 7)) - 1;
+	const months: string[] = [];
+	for (let i = index(from); i <= index(to); i++) {
+		months.push(`${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, '0')}`);
+	}
+	return months;
+};
