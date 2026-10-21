@@ -172,7 +172,8 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 						[labels]="chart().labels"
 						[tooltipTitles]="chart().titles"
 						[series]="chart().series"
-						[spanGaps]="false" />
+						[spanGaps]="false"
+						[clean]="true" />
 				}
 			</section>
 		}
