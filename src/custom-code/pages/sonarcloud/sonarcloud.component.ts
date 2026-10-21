@@ -116,35 +116,46 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 			</section>
 		} @else {
 			<section class="page-section">
-				<h3>{{ 'Sonar_Latest' | translate }}</h3>
-				@if (!from() || !to()) {
-					<div class="empty">{{ 'Sonar_SelectPeriod' | translate }}</div>
-				} @else if (rangeIsInverted()) {
-					<div class="empty">{{ 'Dashboard_InvalidRange' | translate }}</div>
-				} @else {
-					<table class="data-table">
-						<thead>
-							<tr>
-								<th>{{ 'Sonar_Project' | translate }}</th>
-								<th class="number">{{ 'Sonar_Coverage' | translate }}</th>
-								<th>{{ 'Sonar_MeasuredOn' | translate }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							@for (row of rows(); track row.key) {
+				<h3>
+					<button
+						type="button"
+						class="collapse-toggle"
+						[attr.aria-expanded]="tableOpen()"
+						(click)="tableOpen.set(!tableOpen())">
+						<span>{{ 'Sonar_Latest' | translate }}</span>
+						<span [class]="tableOpen() ? 'icon-expand_less' : 'icon-expand_more'"></span>
+					</button>
+				</h3>
+				@if (tableOpen()) {
+					@if (!from() || !to()) {
+						<div class="empty">{{ 'Sonar_SelectPeriod' | translate }}</div>
+					} @else if (rangeIsInverted()) {
+						<div class="empty">{{ 'Dashboard_InvalidRange' | translate }}</div>
+					} @else {
+						<table class="data-table">
+							<thead>
 								<tr>
-									<td class="project-name">{{ row.name }}</td>
-									@if (row.coverage !== null) {
-										<td class="number">{{ row.coverage }}%</td>
-										<td>{{ row.measuredOn }}</td>
-									} @else {
-										<td class="number muted">—</td>
-										<td class="muted">{{ 'Sonar_NoDataInPeriod' | translate }}</td>
-									}
+									<th>{{ 'Sonar_Project' | translate }}</th>
+									<th class="number">{{ 'Sonar_Coverage' | translate }}</th>
+									<th>{{ 'Sonar_MeasuredOn' | translate }}</th>
 								</tr>
-							}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								@for (row of rows(); track row.key) {
+									<tr>
+										<td class="project-name">{{ row.name }}</td>
+										@if (row.coverage !== null) {
+											<td class="number">{{ row.coverage }}%</td>
+											<td>{{ row.measuredOn }}</td>
+										} @else {
+											<td class="number muted">—</td>
+											<td class="muted">{{ 'Sonar_NoDataInPeriod' | translate }}</td>
+										}
+									</tr>
+								}
+							</tbody>
+						</table>
+					}
 				}
 			</section>
 
@@ -176,6 +187,8 @@ export class SonarcloudComponent implements OnInit {
 	protected readonly projects = signal<SonarProject[]>([]);
 	// The filters live in a service, so they are still there when the user leaves this page and comes back.
 	protected readonly projectKeys = this.filters.projectKeys;
+	/** The latest-measurement table opens and closes from its title. */
+	protected readonly tableOpen = this.filters.tableOpen;
 	protected readonly loading = signal(true);
 	/** True while the history of newly selected projects is being read. */
 	protected readonly busy = signal(false);
