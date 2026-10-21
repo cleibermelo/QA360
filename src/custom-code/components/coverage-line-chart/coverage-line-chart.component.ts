@@ -8,7 +8,7 @@ import {
 	OnDestroy,
 	viewChild
 } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartOptions, Plugin, registerables } from 'chart.js';
 import { ChartSeries } from '../../domain/dashboard';
 import { Translator } from '../../shared/translator.service';
 
@@ -47,6 +47,8 @@ export class CoverageLineChartComponent implements OnDestroy {
 	readonly spanGaps = input(true);
 	/** Optional longer text for each label, used as the tooltip title. */
 	readonly tooltipTitles = input<string[]>();
+	/** Lighter look: no vertical grid, faint horizontal lines, small points and one tooltip with every series of the month. */
+	readonly clean = input(false);
 
 	protected readonly translator = inject(Translator);
 
@@ -61,10 +63,14 @@ export class CoverageLineChartComponent implements OnDestroy {
 			const unit = this.unit();
 			const spanGaps = this.spanGaps();
 			const titles = this.tooltipTitles();
+			const clean = this.clean();
 			const style = getComputedStyle(this.canvas().nativeElement);
 			// Reads the theme token at draw time; falls back to a fixed blue if the token is missing.
 			const color = (i: number): string =>
 				style.getPropertyValue(SERIES_COLORS[i % SERIES_COLORS.length]).trim() || '#1c4eb7';
+			const token = (name: string, fallback: string): string => style.getPropertyValue(name).trim() || fallback;
+			const gridColor = token('--grey-3', '#eceef1');
+			const textColor = token('--grey-8', '#6b7280');
 			const datasets = series.map((s, i) => ({
 				label: s.name,
 				data: s.values,
@@ -72,33 +78,68 @@ export class CoverageLineChartComponent implements OnDestroy {
 				backgroundColor: color(i),
 				tension: 0.2,
 				// Months without an entry do not break the line, unless the caller wants the gaps shown.
-				spanGaps
+				spanGaps,
+				...(clean ? { borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 } : {})
 			}));
+
+			const options: ChartOptions<'line'> = {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: {
+					y: {
+						min: 0,
+						max: 100,
+						title: { display: !clean, text: unit },
+						ticks: { callback: (v) => `${v}%`, ...(clean ? { stepSize: 25, color: textColor } : {}) },
+						...(clean ? { grid: { color: gridColor, drawTicks: false }, border: { display: false } } : {})
+					},
+					...(clean
+						? { x: { grid: { display: false }, border: { display: false }, ticks: { color: textColor } } }
+						: {})
+				},
+				...(clean ? { interaction: { mode: 'index' as const, intersect: false } } : {}),
+				plugins: {
+					...(clean
+						? { legend: { labels: { usePointStyle: true, boxWidth: 8, boxHeight: 8, color: textColor } } }
+						: {}),
+					tooltip: {
+						// With gaps shown, series without a value in the month stay out of the tooltip.
+						...(clean ? { filter: (item) => item.parsed.y !== null } : {}),
+						callbacks: {
+							title: (items) => titles?.[items[0].dataIndex] ?? items[0].label,
+							label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}%`
+						}
+					}
+				}
+			};
+
+			// A thin vertical guide at the hovered month, only while the tooltip is open.
+			const hoverLine: Plugin<'line'> = {
+				id: 'hoverLine',
+				afterDatasetsDraw: (chart) => {
+					const active = chart.tooltip?.getActiveElements();
+					if (!active?.length) {
+						return;
+					}
+					const { top, bottom } = chart.chartArea;
+					const ctx = chart.ctx;
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(active[0].element.x, top);
+					ctx.lineTo(active[0].element.x, bottom);
+					ctx.lineWidth = 1;
+					ctx.strokeStyle = gridColor;
+					ctx.stroke();
+					ctx.restore();
+				}
+			};
 
 			this.chart?.destroy();
 			this.chart = new Chart(this.canvas().nativeElement, {
 				type: 'line',
 				data: { labels, datasets },
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					scales: {
-						y: {
-							min: 0,
-							max: 100,
-							title: { display: true, text: unit },
-							ticks: { callback: (v) => `${v}%` }
-						}
-					},
-					plugins: {
-						tooltip: {
-							callbacks: {
-								title: (items) => titles?.[items[0].dataIndex] ?? items[0].label,
-								label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}%`
-							}
-						}
-					}
-				}
+				options,
+				plugins: clean ? [hoverLine] : []
 			});
 		});
 	}
