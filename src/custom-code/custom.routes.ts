@@ -1,5 +1,7 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { AuthGateComponent } from './auth/auth-gate.component';
+import { Translator } from './shared/translator.service';
 
 /**
  * Routes of the app, all lazy-loaded; unknown paths and the root land on the dashboard.
@@ -37,6 +39,8 @@ export const customRoutes: Routes = [
 			},
 			{
 				path: 'sonarcloud',
+				// The shell reads the title of the route when the navigation ends, so it is set here too.
+				title: () => inject(Translator).t('Title_SonarCloud'),
 				loadComponent: () =>
 					import('./pages/sonarcloud/sonarcloud.component').then((c) => c.SonarcloudComponent)
 			},
