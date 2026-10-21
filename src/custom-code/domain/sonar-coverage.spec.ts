@@ -74,8 +74,8 @@ describe('monthRange', () => {
 
 describe('shortProjectName', () => {
 	it('keeps what follows the first dot, or the first underscore when there is no dot', () => {
-		expect(shortProjectName('iberia_lithium-product-tech.usg.server')).toBe('usg.server');
-		expect(shortProjectName('iberia_ekon-product-ac')).toBe('ekon-product-ac');
+		expect(shortProjectName('acme_product-tech.usg.server')).toBe('usg.server');
+		expect(shortProjectName('acme_service-ac')).toBe('service-ac');
 		expect(shortProjectName('plain')).toBe('plain');
 		expect(shortProjectName('odd.')).toBe('odd.');
 	});
@@ -83,10 +83,10 @@ describe('shortProjectName', () => {
 	it('keeps the full name of projects whose short names would be equal', () => {
 		expect(
 			shortProjectNames([
-				'iberia_lithium-product-tech.srs.server',
-				'iberia_lithium-product-core.srs.server',
-				'iberia_lithium-product-tech.usg.server'
+				'acme_product-tech.srs.server',
+				'acme_product-core.srs.server',
+				'acme_product-tech.usg.server'
 			])
-		).toEqual(['iberia_lithium-product-tech.srs.server', 'iberia_lithium-product-core.srs.server', 'usg.server']);
+		).toEqual(['acme_product-tech.srs.server', 'acme_product-core.srs.server', 'usg.server']);
 	});
 });

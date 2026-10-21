@@ -59,7 +59,7 @@ export const monthRange = (from: string, to: string): string[] => {
 };
 
 /**
- * Short label for a project: what follows the first dot ("iberia_lithium-product-tech.usg.server" -> "usg.server"),
+ * Short label for a project: what follows the first dot ("acme_product-tech.usg.server" -> "usg.server"),
  * or what follows the first underscore when there is no dot.
  */
 export const shortProjectName = (name: string): string => {
