@@ -38,11 +38,11 @@ O job de sincronização (`scripts/sonar-sync/sync.mjs`) lê o histórico de cob
 
 Efeito na carga de 21/10/2026: 44 projetos passaram a usar dados da `main`, e a carga gravou 853 linhas (antes, 761).
 
-| Projeto       | Antes                  | Depois                 |
-| ------------- | ---------------------- | ---------------------- |
-| `projeto-a`   | último em abril, 56,5% | outubro, 70,2% (20/10) |
-| `projeto-b`   | fevereiro              | junho (29/06)          |
-| `projeto-c`   | sem linhas             | 1 mês (12/10)          |
+| Projeto     | Antes                  | Depois                 |
+| ----------- | ---------------------- | ---------------------- |
+| `projeto-a` | último em abril, 56,5% | outubro, 70,2% (20/10) |
+| `projeto-b` | fevereiro              | junho (29/06)          |
+| `projeto-c` | sem linhas             | 1 mês (12/10)          |
 
 ## Pontos de atenção
 
