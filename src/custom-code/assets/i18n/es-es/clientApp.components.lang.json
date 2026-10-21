@@ -65,7 +65,6 @@
 	"RES_Sonar_ManyProjects": "Con más de {count} proyectos, los colores del gráfico se repiten.",
 	"RES_Sonar_Coverage": "Cobertura de pruebas unitarias",
 	"RES_Sonar_MeasuredOn": "Medido el",
-	"RES_Sonar_History": "Historial de cobertura",
 
 	"RES_Records_Period": "Periodo",
 	"RES_Records_Month": "Mes",

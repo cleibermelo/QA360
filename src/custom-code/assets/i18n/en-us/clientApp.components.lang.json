@@ -65,7 +65,6 @@
 	"RES_Sonar_ManyProjects": "With more than {count} projects the chart colors repeat.",
 	"RES_Sonar_Coverage": "Unit test coverage",
 	"RES_Sonar_MeasuredOn": "Measured on",
-	"RES_Sonar_History": "Coverage history",
 
 	"RES_Records_Period": "Period",
 	"RES_Records_Month": "Month",

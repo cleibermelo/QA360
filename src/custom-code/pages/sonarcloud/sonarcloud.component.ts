@@ -160,7 +160,6 @@ const EMPTY_CHART: ChartView = { labels: [], titles: [], series: [] };
 			</section>
 
 			<section class="page-section">
-				<h3>{{ 'Sonar_History' | translate }}</h3>
 				@if (!from() || !to()) {
 					<div class="empty">{{ 'Sonar_SelectPeriod' | translate }}</div>
 				} @else if (rangeIsInverted()) {
