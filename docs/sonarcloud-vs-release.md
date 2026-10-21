@@ -2,7 +2,7 @@
 
 O QAPulse mostra o **Coverage do SonarCloud**. O relatório de cobertura da release (Azure DevOps) mostra outra coisa. Os dois estão corretos, mas medem de formas diferentes e não devem ser comparados diretamente.
 
-Os números abaixo são do projeto `iberia_lithium-product-tech.apps.server`, no build de 04/09/2026 (branch `main`).
+Os números abaixo são de um projeto (`projeto-a`), no build de 04/09/2026 (branch `main`).
 
 ## 1. A fórmula
 

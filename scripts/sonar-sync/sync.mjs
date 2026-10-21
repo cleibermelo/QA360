@@ -1,9 +1,11 @@
 // Collects the unit test coverage of the SonarCloud projects and stores the last value of each month in Supabase.
 //
-// Run:  node --experimental-strip-types scripts/sonar-sync/sync.mjs [--dry-run] [--only=key1,key2]
+// Run:  node --experimental-strip-types scripts/sonar-sync/sync.mjs [--dry-run] [--quiet] [--only=key1,key2]
 // Env:  SONAR_TOKEN, SONAR_ORG, SONAR_PROJECT_FILTER (optional), SONAR_EXTRA_BRANCHES (optional, default "main"),
 //        SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
 // Without the two SUPABASE_* variables (or with --dry-run) nothing is written: the rows are only counted and listed.
+// With --quiet (the default in GitHub Actions, where the logs of a public repository are public) the log has no
+// project names or coverage values, only counts.
 //
 // Many projects still have "master" as the SonarCloud main branch while the pipelines now analyse "main", which
 // SonarCloud treats as a secondary branch. The history of the extra branches is merged with the main branch's:
@@ -46,6 +48,15 @@ if (Boolean(supabaseUrl) !== Boolean(serviceRoleKey)) {
 	fail('defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY juntos (ou nenhum, para um teste sem gravação).');
 }
 const dryRun = args.includes('--dry-run') || !supabaseUrl;
+const quiet = args.includes('--quiet') || process.env['GITHUB_ACTIONS'] === 'true';
+
+// Messages of SonarCloud errors name the project; in quiet mode the name is replaced.
+const described = (text, project) => {
+	if (!quiet) {
+		return text;
+	}
+	return [project.key, project.name].filter(Boolean).reduce((t, name) => t.replaceAll(name, '<projeto>'), text);
+};
 
 const sonar = createSonarClient({ token });
 const writer = dryRun ? undefined : createSupabaseWriter({ url: supabaseUrl, serviceRoleKey });
@@ -98,7 +109,9 @@ try {
 			const monthly = lastValuePerMonth(history);
 			if (monthly.length === 0) {
 				stats.skipped++;
-				console.log(`PULADO  ${project.key}: sem análise de cobertura.`);
+				if (!quiet) {
+					console.log(`PULADO  ${project.key}: sem análise de cobertura.`);
+				}
 				continue;
 			}
 			const updatedAt = new Date().toISOString();
@@ -114,10 +127,12 @@ try {
 			stats.processed++;
 			stats.rows += rows.length;
 			const last = monthly[monthly.length - 1];
-			console.log(
-				`OK      ${project.key}: ${rows.length} mês(es); último ${last.month.slice(0, 7)} = ${last.coverage}% (${last.measuredOn})` +
-					(usedBranches.length ? `; inclui branch ${usedBranches.join(', ')}.` : '.')
-			);
+			if (!quiet) {
+				console.log(
+					`OK      ${project.key}: ${rows.length} mês(es); último ${last.month.slice(0, 7)} = ${last.coverage}% (${last.measuredOn})` +
+						(usedBranches.length ? `; inclui branch ${usedBranches.join(', ')}.` : '.')
+				);
+			}
 		} catch (error) {
 			// A rejected token affects every project, so it stops the run; other errors only count against this project.
 			if (error instanceof SonarError && error.status === 401) {
@@ -126,11 +141,11 @@ try {
 			// Projects can be listed yet refuse to share their history (private, no "Browse" permission): not a failure of the job.
 			if (isAccessError(error)) {
 				stats.warnings++;
-				console.warn(`AVISO   ${project.key}: ${error.message}`);
+				console.warn(`AVISO   ${quiet ? '<projeto>' : project.key}: ${described(error.message, project)}`);
 				continue;
 			}
 			stats.errors++;
-			console.error(`ERRO    ${project.key}: ${error.message}`);
+			console.error(`ERRO    ${quiet ? '<projeto>' : project.key}: ${described(error.message, project)}`);
 		}
 	}
 } catch (error) {

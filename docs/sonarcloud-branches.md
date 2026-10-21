@@ -1,6 +1,6 @@
 # SonarCloud: branches `master` e `main`
 
-Como os projetos da organização `cegidgroup` estão configurados no SonarCloud em relação às branches e o que o QAPulse faz a respeito.
+Como os projetos da organização estão configurados no SonarCloud em relação às branches e o que o QAPulse faz a respeito. Os nomes de projetos abaixo são genéricos (`projeto-a`, `projeto-b`...), porque este repositório é público.
 
 ## Situação encontrada
 
@@ -10,7 +10,7 @@ Em muitos projetos a branch principal ainda se chama **`master`**, mas os pipeli
 
 Resultado: o histórico da `master` pára na data em que o repositório passou a usar `main`, mesmo que o projeto continue sendo analisado.
 
-### Exemplo: `iberia_lithium-product-tech.apps.server`
+### Exemplo: `projeto-a`
 
 | Branch no SonarCloud | Papel      | Última análise | Cobertura |
 | -------------------- | ---------- | -------------- | --------- |
@@ -21,10 +21,10 @@ O dashboard do SonarCloud mostra "Last analysis: 17 Apr 2026" e 56,5%, embora o 
 
 ### Alcance
 
-Numa varredura dos 136 projetos filtrados por `iberia` (20/10/2026):
+Numa varredura de 136 projetos da organização (20/10/2026):
 
 - **49 projetos** tinham análises mais recentes fora da branch principal. Quase todos seguem o padrão `master` principal e `main` mais recente.
-- Alguns projetos aparecem como "sem análise" porque a `master` nunca foi analisada, mas têm dados na `main`. Exemplo: `iberia_lithium-product-tech.cbms.server` (análise na `main` em 12/10/2026).
+- Alguns projetos aparecem como "sem análise" porque a `master` nunca foi analisada, mas têm dados na `main`. Exemplo: `projeto-c` (análise na `main` em 12/10/2026).
 - Alguns têm análises em outras branches, como `feature/...` e `release/...`. Essas não entram no QAPulse.
 
 ## O que o QAPulse faz
@@ -40,15 +40,15 @@ Efeito na carga de 21/10/2026: 44 projetos passaram a usar dados da `main`, e a 
 
 | Projeto       | Antes                  | Depois                 |
 | ------------- | ---------------------- | ---------------------- |
-| `apps.server` | último em abril, 56,5% | outubro, 70,2% (20/10) |
-| `srs.server`  | fevereiro              | junho (29/06)          |
-| `cbms.server` | sem linhas             | 1 mês (12/10)          |
+| `projeto-a`   | último em abril, 56,5% | outubro, 70,2% (20/10) |
+| `projeto-b`   | fevereiro              | junho (29/06)          |
+| `projeto-c`   | sem linhas             | 1 mês (12/10)          |
 
 ## Pontos de atenção
 
-- **Valores de 0% na `main`.** Vários projetos aparecem com 0% na `main`, por exemplo `usg.server`, `cbms.server` e `ids.server` (este tinha 41,5% na `master`, em fevereiro). É o valor que o SonarCloud reporta. Provavelmente o pipeline da `main` não envia o relatório de cobertura. Vale confirmar com a equipe antes de tomar esses 0% como cobertura real.
+- **Valores de 0% na `main`.** Vários projetos aparecem com 0% na `main`, por exemplo `projeto-e`, `projeto-c` e `projeto-f` (este tinha 41,5% na `master`, em fevereiro). É o valor que o SonarCloud reporta. Provavelmente o pipeline da `main` não envia o relatório de cobertura. Vale confirmar com a equipe antes de tomar esses 0% como cobertura real.
 - **`main` precisa ser a branch de produção.** O job assume que sim. Se algum projeto usar outro nome, acrescente-o em `SONAR_EXTRA_BRANCHES`.
-- **Projetos com erro 404.** Cerca de nove projetos, como `iberia_ekon-product-la`, continuam com aviso 404 porque o SonarCloud não entrega o histórico deles nem pela `main`. Isso não depende do código do QAPulse.
+- **Projetos com erro 404.** Cerca de nove projetos, como `projeto-d`, continuam com aviso 404 porque o SonarCloud não entrega o histórico deles nem pela `main`. Isso não depende do código do QAPulse.
 
 ## Correção na origem (opcional)
 

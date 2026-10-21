@@ -80,7 +80,8 @@ node --experimental-strip-types scripts/sonar-sync/sync.mjs
 
 - Sem `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` (ou com `--dry-run`) nada é gravado: o script só lista o que gravaria.
 - `--only=chave1,chave2` limita a execução a esses projetos.
-- Referências para conferir: `iberia_lithium-product-tech.srs.server` termina em 33.8% (2026-02-25), `iberia_lithium-product-core.ids.server` em 41.5% (2026-02-27) e `iberia_lithium-product-tech.cbms.server` não tem análise e não gera linhas.
+- `--quiet` esconde nomes de projetos e percentagens do log, deixando só contagens. É o padrão no GitHub Actions, porque os logs de um repositório público são públicos.
+- Para conferir, compare o último valor de um projeto com o que o SonarCloud mostra; um projeto sem análise de cobertura não gera linhas.
 
 ## Estrutura (`src/custom-code`)
 
