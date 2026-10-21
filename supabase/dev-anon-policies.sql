@@ -1,4 +1,5 @@
 -- QAPulse - SOMENTE DESENVOLVIMENTO / MVP SEM LOGIN.
+-- JA REMOVIDO DO BANCO (verificado em 21/10/2026). NAO EXECUTE DE NOVO: o app exige login.
 -- Libera leitura e escrita para o papel "anon", ou seja, qualquer pessoa com a URL do projeto e a
 -- chave publica consegue ler e alterar os dados. Nao use com dados reais.
 -- Para remover quando o login for implementado: execute o bloco comentado no final deste arquivo.

@@ -33,7 +33,7 @@ Inglês (padrão), português de Portugal, espanhol e francês, pelo mecanismo d
 
 ## Onde ficam os dados
 
-**No Supabase.** Tabelas e regras em `supabase/schema.sql`; detalhes, segurança e pendências em `docs/supabase.md`. As policies de desenvolvimento (`supabase/dev-anon-policies.sql`) valem só para o papel `anon`: o login protege as telas, mas não o banco. Não use dados reais até as policies serem trocadas por regras para usuários autenticados.
+**No Supabase.** Tabelas e regras em `supabase/schema.sql`; detalhes, segurança e pendências em `docs/supabase.md`. As policies de desenvolvimento (`supabase/dev-anon-policies.sql`) para o papel `anon` já foram removidas: só usuários logados leem e gravam, e não se deve executá-las de novo num banco com dados reais.
 
 ## Login (Supabase Auth)
 

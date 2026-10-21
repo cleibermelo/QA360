@@ -163,7 +163,7 @@ create or replace view public.sonar_projects with (security_invoker = true) as
 -- ---------------------------------------------------------------------------
 -- Seguranca: RLS ligado em todas as tabelas.
 -- Sem nenhuma policy ninguem acessa; aqui so usuarios autenticados (Supabase Auth) podem ler e escrever.
--- Enquanto o app roda sem login, execute tambem supabase/dev-anon-policies.sql (ver docs/supabase.md).
+-- O app exige login (papel authenticated). Nao execute supabase/dev-anon-policies.sql com dados reais (ver docs/supabase.md).
 -- ---------------------------------------------------------------------------
 do $$
 declare
