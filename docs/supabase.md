@@ -7,7 +7,7 @@ Estado: **app integrado ao Supabase** (projeto `vqozovkvyqdqrztmbypy`, região e
 | Arquivo                                                 | Para quê                                                                                                                                                                                     |
 | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `supabase/schema.sql`                                   | Cria as tabelas, restrições, gatilho de histórico, dados iniciais (tipos de teste, equipe TOCT e 4 aplicações) e liga RLS com acesso para usuários autenticados. Pode rodar mais de uma vez. |
-| `supabase/dev-anon-policies.sql`                        | **Só desenvolvimento.** Libera leitura e escrita para quem não está logado. Tem o bloco para remover no final.                                                                               |
+| `supabase/dev-anon-policies.sql`                        | **Só desenvolvimento e já removido do banco.** Libera leitura e escrita para quem não está logado. **Não execute de novo.** Tem o bloco para remover no final.                              |
 | `supabase/migrate-test-types.sql`                       | Migra um banco criado com a lista antiga de tipos de teste (e2e_api, e2e_ui, contract, security) para a atual. Rodar uma vez.                                                                |
 | `src/custom-code/environments/**/*.json`                | Bloco `supabase` (URL, chave pública e tamanho mínimo da senha) lido em tempo de execução.                                                                                                   |
 | `src/custom-code/auth/`                                 | Cliente único do Supabase, sessão e proteção das rotas.                                                                                                                                      |
@@ -40,18 +40,18 @@ Continuam validados no app (não dá para expressar como constraint simples): "t
 
 ## Segurança (importante)
 
-A chave publishable fica no código do navegador por desenho. O que protege os dados são as policies do banco. Hoje `supabase/dev-anon-policies.sql` está ativo: **qualquer pessoa com a URL e a chave lê e altera os dados.** Aceitável só para teste sem dados reais.
+A chave publishable fica no código do navegador por desenho. O que protege os dados são as policies do banco. As policies de desenvolvimento (`supabase/dev-anon-policies.sql`) **já foram removidas**: só usuários logados (papel `authenticated`) leem e gravam, pelas policies do `schema.sql`.
 
-Antes de usar dados reais:
+Verificação de 21/10/2026: com a chave publishable e sem login, a leitura de `teams`, `applications`, `coverage_entries`, `test_types` e `sonar_coverage_monthly` devolve 0 linhas, enquanto a chave de servidor lê os dados. Para repetir o teste, peça `GET <url>/rest/v1/<tabela>?select=*&limit=3` com o cabeçalho `apikey` da chave publishable: o resultado deve ser uma lista vazia.
 
-1. Login: **feito** (e-mail e senha). Falta só o passo 2.
-2. Remover as policies `anon` (bloco comentado no fim de `supabase/dev-anon-policies.sql`). As policies para `authenticated` do `schema.sql` já cobrem os usuários logados.
+Regras para manter assim:
 
-Nunca coloque a chave `service_role` / secret no código do app.
+1. Não execute `supabase/dev-anon-policies.sql` num banco com dados reais.
+2. Nunca coloque a chave `service_role` / secret no código do app, no repositório nem em conversas. Ela só vale no GitHub Secrets (job `sonar-sync`) e em arquivos `.env` locais, que o git ignora.
 
 ## Pendências e decisões
 
-1. **Login**: implementado; falta remover as policies `anon`.
+1. **Login**: implementado, e as policies `anon` já foram removidas (ver "Segurança").
 2. **Um banco ou um por ambiente** (dv, st, pd): a URL e a chave ficam no bloco `supabase` de cada arquivo de ambiente; dv, st e sx estão vazios.
 3. **Plano gratuito**: projetos sem uso por cerca de uma semana são pausados e precisam ser reativados no painel.
 4. Salvar equipe não é uma transação única; se virar problema, trocar por uma função SQL (RPC) que faça tudo de uma vez.
